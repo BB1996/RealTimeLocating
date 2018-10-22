@@ -81,12 +81,14 @@ public class MapTracking extends FragmentActivity implements OnMapReadyCallback 
                             .position(friendLocation)
                             .title(tracking.getEmail())
                             .snippet("Distance" + new DecimalFormat("#.#").format((currentUser.distanceTo(friend)) / 1000) + " km")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 12.0f));
                 }
 
                 LatLng current = new LatLng(lat, lng);
-                mMap.addMarker(new MarkerOptions().position(current).title(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                mMap.addMarker(new MarkerOptions().position(current)
+                                                  .title(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                                                  .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
 
             }
 

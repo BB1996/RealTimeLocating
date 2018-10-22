@@ -322,7 +322,12 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     protected void onResume() {
         super.onResume();
         checkPlayServices();
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
