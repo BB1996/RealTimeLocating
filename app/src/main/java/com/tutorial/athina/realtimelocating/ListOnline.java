@@ -2,6 +2,7 @@ package com.tutorial.athina.realtimelocating;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -79,7 +80,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
+                    ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
             }, MY_PERMISSON_REQUEST_CODE);
@@ -112,7 +113,8 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                             String.valueOf(mLastLocation.getLatitude()),
                             String.valueOf(mLastLocation.getLongitude())));
         } else {
-            Toast.makeText(this, "Couldn't get location", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Couldn't get location", Toast.LENGTH_SHORT).show();
+            Log.d("TEST", "Couldn't load location");
         }
     }
 
@@ -169,10 +171,30 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 return new ListOnlineViewHolder(itemView);
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
-            protected void onBindViewHolder(@NonNull ListOnlineViewHolder viewHolder, int position, @NonNull User model) {
-                viewHolder.textEmail.setText(model.getEmail());
+            protected void onBindViewHolder(@NonNull ListOnlineViewHolder viewHolder, int position, @NonNull final User model) {
+                if (model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                    viewHolder.textEmail.setText(model.getEmail() + " (me)");
+                } else {
+                    viewHolder.textEmail.setText(model.getEmail());
+                }
 
+
+                viewHolder.itemClickListener = new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        if (!model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+
+                            Intent map = new Intent(ListOnline.this, MapTracking.class);
+                            map.putExtra("email", model.getEmail());
+                            map.putExtra("lat", mLastLocation.getLatitude());
+                            map.putExtra("lng", mLastLocation.getLongitude());
+                            startActivity(map);
+
+                        }
+                    }
+                };
             }
 
         };
@@ -287,6 +309,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     protected void onStop() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
+        }
+        if(adapter != null){
+            adapter.stopListening();
         }
         super.onStop();
     }
