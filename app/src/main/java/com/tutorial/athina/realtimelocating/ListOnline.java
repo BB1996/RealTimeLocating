@@ -163,19 +163,11 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
         adapter = new FirebaseRecyclerAdapter<User, ListOnlineViewHolder>(options) {
 
-            @NonNull
             @Override
-            public ListOnlineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View itemView = LayoutInflater.from(getBaseContext()).inflate(R.layout.user_layout, parent, false);
-
-                return new ListOnlineViewHolder(itemView);
-            }
-
-            @SuppressLint("SetTextI18n")
-            @Override
-            protected void onBindViewHolder(@NonNull ListOnlineViewHolder viewHolder, int position, @NonNull final User model) {
+            protected void onBindViewHolder(ListOnlineViewHolder viewHolder, int position,final User model) {
                 if (model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                     viewHolder.textEmail.setText(model.getEmail() + " (me)");
+
                 } else {
                     viewHolder.textEmail.setText(model.getEmail());
                 }
@@ -196,6 +188,16 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                     }
                 };
             }
+
+            @Override
+            public ListOnlineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View itemView = LayoutInflater.from(getBaseContext()).inflate(R.layout.user_layout, parent, false);
+
+                return new ListOnlineViewHolder(itemView);
+            }
+
+
+
 
         };
         adapter.startListening();
