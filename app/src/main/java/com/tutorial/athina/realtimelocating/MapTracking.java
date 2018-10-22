@@ -78,14 +78,14 @@ public class MapTracking extends FragmentActivity implements OnMapReadyCallback 
                     distance(currentUser, friend);
 
                     mMap.addMarker(new MarkerOptions()
-                                    .position(friendLocation)
-                                    .title(tracking.getEmail())
-                                    .snippet("Distance" + new DecimalFormat("#.#").format((currentUser.distanceTo(friend)) / 1000) + " km")
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lng ),12.0f));
+                            .position(friendLocation)
+                            .title(tracking.getEmail())
+                            .snippet("Distance" + new DecimalFormat("#.#").format((currentUser.distanceTo(friend)) / 1000) + " km")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 12.0f));
                 }
 
-                LatLng current = new LatLng(lat,lng);
+                LatLng current = new LatLng(lat, lng);
                 mMap.addMarker(new MarkerOptions().position(current).title(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
 
             }
@@ -102,13 +102,13 @@ public class MapTracking extends FragmentActivity implements OnMapReadyCallback 
         double theta = currentUser.getLongitude() - friend.getLongitude();
         double dist = Math.sin(deg2rad(currentUser.getLatitude()))
                 * Math.sin(deg2rad(friend.getLatitude()))
-                *Math.cos(deg2rad(currentUser.getLatitude()))
-                *Math.cos(deg2rad(friend.getLatitude()))
-                *Math.cos(deg2rad(theta));
+                * Math.cos(deg2rad(currentUser.getLatitude()))
+                * Math.cos(deg2rad(friend.getLatitude()))
+                * Math.cos(deg2rad(theta));
 
         dist = Math.acos(dist);
         dist = rad2deg(dist);
-        dist = dist * 60 *1.1515;
+        dist = dist * 60 * 1.1515;
 
         return dist;
     }
@@ -127,4 +127,5 @@ public class MapTracking extends FragmentActivity implements OnMapReadyCallback 
 
 
     }
+
 }
