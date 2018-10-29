@@ -1,7 +1,9 @@
 package com.tutorial.athina.realtimelocating;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +16,7 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
 
     public static final int LOGIN_PERMISSON = 1000;
+    public static final int MY_PERMISSON_REQUEST_CODE = 7171;
     Button buttonLogIn;
 
 
@@ -21,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        buttonLogIn = (Button) findViewById(R.id.buttonSignIn);
         buttonLogIn = (Button) findViewById(R.id.buttonSignIn);
         buttonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override

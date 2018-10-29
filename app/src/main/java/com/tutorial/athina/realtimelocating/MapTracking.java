@@ -99,7 +99,7 @@ public class MapTracking extends FragmentActivity implements OnMapReadyCallback 
         });
     }
 
-    private double distance(Location currentUser, Location friend) {
+    private void distance(Location currentUser, Location friend) {
 
         double theta = currentUser.getLongitude() - friend.getLongitude();
         double dist = Math.sin(deg2rad(currentUser.getLatitude()))
@@ -112,7 +112,6 @@ public class MapTracking extends FragmentActivity implements OnMapReadyCallback 
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
 
-        return dist;
     }
 
     private double rad2deg(double rad) {

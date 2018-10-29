@@ -50,7 +50,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     public static final int PLAY_SERVICES_RES_REQUEST = 7172;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
+
+    private Location mLastLocation = new Location("dummy");
+
 
     private static int UPDATE_INTERVAL = 5000;
     private static int FASTEST_INTERVAL = 3000;
@@ -80,7 +82,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{
+            ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
             }, MY_PERMISSON_REQUEST_CODE);
@@ -89,11 +91,12 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 buildGoogleApiClient();
                 createLocationRequest();
                 displayLocation();
+
             }
         }
         setupSystem();
-
         updateList();
+
 
     }
 
@@ -164,7 +167,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         adapter = new FirebaseRecyclerAdapter<User, ListOnlineViewHolder>(options) {
 
             @Override
-            protected void onBindViewHolder(ListOnlineViewHolder viewHolder, int position,final User model) {
+            protected void onBindViewHolder(ListOnlineViewHolder viewHolder, int position, final User model) {
                 if (model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                     viewHolder.textEmail.setText(model.getEmail() + " (me)");
 
@@ -176,12 +179,15 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 viewHolder.itemClickListener = new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
+
                         if (!model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
 
                             Intent map = new Intent(ListOnline.this, MapTracking.class);
                             map.putExtra("email", model.getEmail());
                             map.putExtra("lat", mLastLocation.getLatitude());
                             map.putExtra("lng", mLastLocation.getLongitude());
+
+
                             startActivity(map);
 
                         }
@@ -195,8 +201,6 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
                 return new ListOnlineViewHolder(itemView);
             }
-
-
 
 
         };
@@ -312,7 +316,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
-        if(adapter != null){
+        if (adapter != null) {
             adapter.stopListening();
         }
         super.onStop();
@@ -322,9 +326,21 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-        if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, MY_PERMISSON_REQUEST_CODE);
         }
+            else{
+                if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+                 }
+            }
+
+
+
 
     }
 
