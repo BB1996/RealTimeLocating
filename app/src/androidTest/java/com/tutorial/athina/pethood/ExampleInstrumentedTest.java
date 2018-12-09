@@ -1,4 +1,4 @@
-package com.tutorial.athina.realtimelocating;
+package com.tutorial.athina.pethood;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.tutorial.athina.realtimelocating;
+package com.tutorial.athina.pethood;
 
 import org.junit.Test;
 

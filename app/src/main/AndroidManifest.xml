@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.tutorial.athina.realtimelocating">
+    package="com.tutorial.athina.pethood">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -35,7 +35,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListOnline" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterDogActivity" />
+        <provider
+            android:name="com.tutorial.athina.pethood.UsersProvider"
+            android:authorities="com.tutorial.athina.pethood.UsersProvider"
+            android:exported="false" />
+        <provider
+            android:name="com.tutorial.athina.pethood.LoginProvider"
+            android:authorities="com.tutorial.athina.pethood.LoginProvider"
+            android:exported="false" />
+
+        <provider
+            android:name="com.tutorial.athina.pethood.DogsProvider"
+            android:authorities="com.tutorial.athina.pethood.DogsProvider"
+            android:exported="false" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -52,7 +67,7 @@
             android:value="@string/google_maps_key" />
 
 
-    <activity android:name=".MapTracking"
+    <activity android:name="com.tutorial.athina.pethood.MapTracking"
         android:label="@string/title_activity_map_tracking">
     </activity>
     </application>

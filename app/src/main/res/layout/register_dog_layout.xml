@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/loginbackground">
+
+    <TextView
+        android:id="@+id/txtdogName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="121dp"
+        android:text="@string/dog_name" />
+
+    <EditText
+        android:id="@+id/dogName"
+        android:layout_width="193dp"
+        android:layout_height="31dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="111dp"
+        android:layout_marginEnd="82dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/dogOwner"
+        android:layout_width="193dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/dogName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="82dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:id="@+id/txtOwner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/txtdogName"
+        android:layout_alignBottom="@+id/dogOwner"
+        android:text="@string/owner" />
+
+    <TextView
+        android:id="@+id/txtBreed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="186dp"
+        android:layout_marginEnd="7dp"
+        android:layout_toStartOf="@+id/dogName"
+        android:text="@string/breed" />
+
+    <EditText
+        android:id="@+id/dogBreed"
+        android:layout_width="191dp"
+        android:layout_height="34dp"
+        android:layout_below="@+id/dogOwner"
+        android:layout_alignStart="@+id/dogName"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <CheckBox
+        android:id="@+id/dogSizeSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/dogBreed"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="220dp"
+        android:text="@string/s"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:id="@+id/dogSizeMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/dogSizeSmall"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="174dp"
+        android:text="@string/m"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txtSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dogSizeSmall"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
+        android:layout_toStartOf="@+id/dogName"
+        android:text="@string/size" />
+
+    <CheckBox
+        android:id="@+id/dogSizeLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/dogSizeSmall"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="115dp"
+        android:text="@string/l"
+        android:onClick="onCheckboxClicked"/>
+
+    <TextView
+        android:id="@+id/txtMate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/dogName"
+        android:text="@string/mating" />
+
+    <Switch
+        android:id="@+id/dogMating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/dogSizeMedium"
+        android:layout_alignBottom="@+id/txtMate"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="-3dp"
+        android:textOff="@string/no"
+        android:textOn="@string/yes" />
+
+    <TextView
+        android:id="@+id/txtColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtOwner"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="232dp"
+        android:text="@string/color" />
+
+    <TextView
+        android:id="@+id/txtAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/txtColor"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="196dp"
+        android:text="@string/age" />
+
+    <EditText
+        android:id="@+id/dogColor"
+        android:layout_width="200dp"
+        android:layout_height="32dp"
+        android:layout_below="@+id/txtMate"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/txtBreed"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/dogAge"
+        android:layout_width="199dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/dogColor"
+        android:layout_alignBottom="@+id/txtAge"
+        android:layout_marginBottom="0dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/registerDogBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="-11dp"
+        android:layout_marginBottom="85dp"
+        android:layout_toEndOf="@+id/dogSizeSmall"
+        android:text="@string/register_dog" />
+
+</RelativeLayout>
