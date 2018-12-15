@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/txtdogName"
         android:layout_alignBottom="@+id/dogOwner"
-        android:text="@string/owner" />
+        android:text="@string/owner_mail" />
 
     <TextView
         android:id="@+id/txtBreed"

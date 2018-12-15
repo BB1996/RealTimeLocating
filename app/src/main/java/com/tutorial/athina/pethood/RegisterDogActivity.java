@@ -1,7 +1,12 @@
 package com.tutorial.athina.pethood;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,10 +17,13 @@ import android.widget.Switch;
 public class RegisterDogActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String TAG = "Register Dog Activity";
+    private String switchResponse;
+    private String checkboxResponse;
     private EditText dogName, dogOwner, dogBreed, dogColor, dogAge;
     private Button registerDogButton;
     private CheckBox dogSmall, dogMedium, dogLarge;
     private Switch mateSwitch;
+    public static int idDog = 1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +49,31 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+
     @Override
     public void onClick(View v) {
 
+        DbHelperDogs dbHelper = new DbHelperDogs(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues valuesDog = new ContentValues();
 
+        valuesDog.clear();
+        valuesDog.put(DogsContract.Dogs.ID, idDog++);
+        valuesDog.put(DogsContract.Dogs.NAME, dogName.getText().toString());
+        valuesDog.put(DogsContract.Dogs.OWNER, dogOwner.getText().toString());
+        valuesDog.put(DogsContract.Dogs.BREED, dogBreed.getText().toString());
+        valuesDog.put(DogsContract.Dogs.SIZE, checkboxResponse);
+        valuesDog.put(DogsContract.Dogs.MATE_FLAG, switchResponse);
+        valuesDog.put(DogsContract.Dogs.COLOR, dogColor.getText().toString());
+        valuesDog.put(DogsContract.Dogs.AGE, dogAge.getText().toString());
+
+        Uri uriDogs = getContentResolver().insert(DogsContract.CONTENT_URI, valuesDog);
+
+        if (uriDogs != null) {
+            Log.d(TAG, String.format("%s %s %s %s %s %s %s",dogName.getText().toString(),dogOwner.getText().toString(),dogBreed.getText().toString(),checkboxResponse,
+                    switchResponse,dogColor.getText().toString(),dogAge.getText().toString()));
+        }
+        startActivity(new Intent(this,MapTracking.class));
     }
 
     public void onCheckboxClicked(View view) {
@@ -54,18 +83,17 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.dogSizeSmall:
                 if (checked) {
-
-                }
+                    checkboxResponse = "Small";                }
                 break;
             case R.id.dogSizeMedium:
                 if (checked) {
-
+                    checkboxResponse = "Medium";
                 }
 
                 break;
             case R.id.dogSizeLarge:
                 if (checked) {
-
+                    checkboxResponse = "Large";
                 }
 
                 break;
@@ -78,9 +106,9 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-
+                switchResponse = "Y";
         } else {
-
+                switchResponse = "N";
         }
     }
 }
