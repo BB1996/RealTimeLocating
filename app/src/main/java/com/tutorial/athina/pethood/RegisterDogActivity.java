@@ -2,6 +2,7 @@ package com.tutorial.athina.pethood;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
     private Button registerDogButton;
     private CheckBox dogSmall, dogMedium, dogLarge;
     private Switch mateSwitch;
-    public static int idDog = 1 ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +58,23 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues valuesDog = new ContentValues();
 
+        String queryDogs = "SELECT _id from " + "dogs " + " order by _id desc limit 1";
+        Cursor cursorCountDogs = db.rawQuery(queryDogs,null);
+
         valuesDog.clear();
-        valuesDog.put(DogsContract.Dogs.ID, idDog++);
+        if (cursorCountDogs.moveToFirst()){
+
+            String lastID = cursorCountDogs.getString(cursorCountDogs.getColumnIndex("_id"));
+            int lastIDInt = Integer.parseInt(lastID);
+            valuesDog.put(DogsContract.Dogs.ID, ++lastIDInt);
+
+        }
+
+        else{
+            valuesDog.put(DogsContract.Dogs.ID, 1);
+        }
+
+        cursorCountDogs.close();
         valuesDog.put(DogsContract.Dogs.NAME, dogName.getText().toString());
         valuesDog.put(DogsContract.Dogs.OWNER, dogOwner.getText().toString());
         valuesDog.put(DogsContract.Dogs.BREED, dogBreed.getText().toString());
@@ -73,7 +89,7 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
             Log.d(TAG, String.format("%s %s %s %s %s %s %s",dogName.getText().toString(),dogOwner.getText().toString(),dogBreed.getText().toString(),checkboxResponse,
                     switchResponse,dogColor.getText().toString(),dogAge.getText().toString()));
         }
-        startActivity(new Intent(this,MapTracking.class));
+        startActivity(new Intent(this,MainActivity.class));
     }
 
     public void onCheckboxClicked(View view) {

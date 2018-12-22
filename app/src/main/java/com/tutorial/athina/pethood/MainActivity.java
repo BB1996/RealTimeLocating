@@ -2,12 +2,14 @@ package com.tutorial.athina.pethood;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -80,16 +82,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         DbHelperLogin dbHelper = new DbHelperLogin(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues valuesLogin = new ContentValues();
+
+        String id = "";
 
         String[] email = {mailUser.getText().toString()};
         String[] password = {passwordUser.getText().toString()};
 
         String queryMail = "SELECT * FROM" + " login" + " where " + " EMAIL = ?";
+
         String queryPassword = "SELECT * FROM " + "login" + " where " + "PASS = ?";
         Cursor cursorEmail = db.rawQuery(queryMail, email);
         Cursor cursorPassword = db.rawQuery(queryPassword, password);
 
-        emailUser = mailUser.getText().toString();
+        String[] args = new String[]{mailUser.getText().toString()};
 
         switch (v.getId()) {
             case R.id.btnLogin:
@@ -103,11 +109,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "WRONG PASSWORD", Toast.LENGTH_LONG).show();
                     }
                     else{
-                        Intent map = new Intent(MainActivity.this, MapTracking.class);
-                        map.putExtra("email", emailUser);
-                        map.putExtra("lat", mLastLocation.getLatitude());
-                        map.putExtra("lng", mLastLocation.getLongitude());
-                        startActivity(map);
+
+                        valuesLogin.put(LoginContract.Login.ONLINE, "Yes");
+                        valuesLogin.put(LoginContract.Login.LATITUDE,  mLastLocation.getLatitude());
+                        valuesLogin.put(LoginContract.Login.LONGITUDE,  mLastLocation.getLongitude());
+
+                        int count = db.update(LoginContract.TABLE, valuesLogin, "EMAIL=? ", args);
+
+                        if(count != -1){
+
+                            Intent map = new Intent(MainActivity.this, MapTracking.class);
+                            map.putExtra("email", mailUser.getText().toString());
+                            map.putExtra("lat", mLastLocation.getLatitude());
+                            map.putExtra("lng", mLastLocation.getLongitude());
+                            cursorEmail.close();
+                            startActivity(map);
+
+                        }
+
                     }
                 }
                 break;

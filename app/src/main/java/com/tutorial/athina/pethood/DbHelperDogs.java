@@ -1,5 +1,6 @@
 package com.tutorial.athina.pethood;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,8 +16,8 @@ public class DbHelperDogs extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = String.format(
-                "create table %s (%s int primary key, %s text, %s text, %s text, %s text, %s text, %s text, %s text)",
+        @SuppressLint("DefaultLocale") String sql = String.format(
+                "create table %s (%s int primary key not null, %s text, %s text, %s text, %s text, %s text, %s text, %s text)",
                 DogsContract.TABLE,
                 DogsContract.Dogs.ID,
                 DogsContract.Dogs.NAME,

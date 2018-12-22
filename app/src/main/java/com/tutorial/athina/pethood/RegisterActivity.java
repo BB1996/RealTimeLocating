@@ -2,6 +2,7 @@ package com.tutorial.athina.pethood;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,8 +15,7 @@ import android.widget.EditText;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG = "Register Activity";
-    public static int idUser = 1 ;
-    public static int idLogin = 1;
+
 
     private EditText nameUser, phoneUser, ageUser, emailUser, passUser;
     private Button registerButton;
@@ -49,8 +49,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         SQLiteDatabase dbLogin = dbHelperLogin.getWritableDatabase();
         ContentValues valuesLogin = new ContentValues();
 
+        String queryUsers = "SELECT _id from " + "users " + " order by _id desc limit 1";
+        Cursor cursorCountUsers = dbUsers.rawQuery(queryUsers,null);
+
         valuesUsers.clear();
-        valuesUsers.put(UsersContract.Users.ID, idUser++);
+        if (cursorCountUsers.moveToFirst()){
+
+            String lastID = cursorCountUsers.getString(cursorCountUsers.getColumnIndex("_id"));
+            int lastIDInt = Integer.parseInt(lastID);
+            valuesUsers.put(UsersContract.Users.ID, ++lastIDInt);
+
+        }
+        else{
+            valuesUsers.put(UsersContract.Users.ID, 1);
+        }
+        cursorCountUsers.close();
         valuesUsers.put(UsersContract.Users.NAME, nameUser.getText().toString());
         valuesUsers.put(UsersContract.Users.PHONE, phoneUser.getText().toString());
         valuesUsers.put(UsersContract.Users.AGE, ageUser.getText().toString());
@@ -61,8 +74,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Log.d(TAG, String.format("%s %s %s", nameUser.getText().toString(), phoneUser.getText().toString(),ageUser.getText().toString()));
         }
 
+        String queryLogin = "SELECT _id from " + "login " + " order by _id desc limit 1";
+        Cursor cursorCountLogin = dbLogin.rawQuery(queryLogin,null);
+
         valuesLogin.clear();
-        valuesLogin.put(LoginContract.Login.ID, idLogin++);
+        if (cursorCountLogin.moveToFirst()){
+
+            String lastID = cursorCountLogin.getString(cursorCountLogin.getColumnIndex("_id"));
+            int lastIDInt = Integer.parseInt(lastID);
+            valuesLogin.put(LoginContract.Login.ID, ++lastIDInt);
+
+        }
+
+        else{
+            valuesLogin.put(LoginContract.Login.ID, 1);
+        }
+
+        cursorCountLogin.close();
         valuesLogin.put(LoginContract.Login.EMAIL, emailUser.getText().toString());
         valuesLogin.put(LoginContract.Login.PASSWORD, passUser.getText().toString());
 

@@ -25,6 +25,9 @@ public class LoginContract {
         public static final String ID = BaseColumns._ID;
         public static final String EMAIL = "email";
         public static final String PASSWORD = "pass";
+        public static final String ONLINE = "online";
+        public static final String LATITUDE = "lat";
+        public static final String LONGITUDE = "lng";
 
     }
 }

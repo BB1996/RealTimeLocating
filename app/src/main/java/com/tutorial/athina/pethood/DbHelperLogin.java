@@ -1,5 +1,6 @@
 package com.tutorial.athina.pethood;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,17 +10,22 @@ public class DbHelperLogin extends SQLiteOpenHelper {
 
     public static final String TAG = DbHelperLogin.class.getSimpleName();
 
+
+
     public DbHelperLogin(Context context) {
         super(context, LoginContract.DB_NAME, null, LoginContract.DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = String.format(
-                "create table %s (%s int primary key, %s text, %s text )",
+        @SuppressLint("DefaultLocale") String sql = String.format(
+                "create table %s (%s int primary key  not null, %s text, %s text, %s text, %s text, %s text )",
                 LoginContract.TABLE, LoginContract.Login.ID,
                 LoginContract.Login.EMAIL,
-                LoginContract.Login.PASSWORD);
+                LoginContract.Login.PASSWORD,
+                LoginContract.Login.ONLINE,
+                LoginContract.Login.LATITUDE,
+                LoginContract.Login.LONGITUDE);
         Log.d(TAG, " onCreate with SQL: " + sql);
         db.execSQL(sql);
     }
@@ -27,7 +33,7 @@ public class DbHelperLogin extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("drop table if exists " + LoginContract.TABLE);
-        onCreate(db);
+            db.execSQL("drop table if exists " + LoginContract.TABLE);
+            onCreate(db);
     }
 }
