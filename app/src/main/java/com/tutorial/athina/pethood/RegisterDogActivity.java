@@ -1,19 +1,19 @@
 package com.tutorial.athina.pethood;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterDogActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -25,71 +25,33 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
     private CheckBox dogSmall, dogMedium, dogLarge;
     private Switch mateSwitch;
 
+    DatabaseReference databaseDog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_dog_layout);
+        setContentView(R.layout.registerdog_activity);
 
-        dogName = (EditText) findViewById(R.id.dogName);
-        dogOwner = (EditText) findViewById(R.id.dogOwner);
-        dogBreed = (EditText) findViewById(R.id.dogBreed);
-        dogColor = (EditText) findViewById(R.id.dogColor);
-        dogAge = (EditText) findViewById(R.id.dogAge);
+        dogName = (EditText) findViewById(R.id.dogNameText);
+        dogOwner = (EditText) findViewById(R.id.dogOwnerEmailText);
+        dogBreed = (EditText) findViewById(R.id.dogBreedText);
+        dogColor = (EditText) findViewById(R.id.dogColorText);
+        dogAge = (EditText) findViewById(R.id.dogAgeText);
 
         dogSmall = (CheckBox) findViewById(R.id.dogSizeSmall);
         dogMedium = (CheckBox) findViewById(R.id.dogSizeMedium);
-        dogLarge = (CheckBox) findViewById(R.id.dogSizeLarge);
+        dogLarge = (CheckBox) findViewById(R.id.dogSizeBig);
 
-        mateSwitch = (Switch) findViewById(R.id.dogMating);
+        mateSwitch = (Switch) findViewById(R.id.matingSwitch);
         mateSwitch.setOnCheckedChangeListener(this);
 
-        registerDogButton = (Button) findViewById(R.id.registerDogBtn);
+        databaseDog = FirebaseDatabase.getInstance().getReference("dog");
+
+        registerDogButton = (Button) findViewById(R.id.registerButton);
         registerDogButton.setOnClickListener(this);
 
 
-    }
-
-
-    @Override
-    public void onClick(View v) {
-
-        DbHelperDogs dbHelper = new DbHelperDogs(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues valuesDog = new ContentValues();
-
-        String queryDogs = "SELECT _id from " + "dogs " + " order by _id desc limit 1";
-        Cursor cursorCountDogs = db.rawQuery(queryDogs,null);
-
-        valuesDog.clear();
-        if (cursorCountDogs.moveToFirst()){
-
-            String lastID = cursorCountDogs.getString(cursorCountDogs.getColumnIndex("_id"));
-            int lastIDInt = Integer.parseInt(lastID);
-            valuesDog.put(DogsContract.Dogs.ID, ++lastIDInt);
-
-        }
-
-        else{
-            valuesDog.put(DogsContract.Dogs.ID, 1);
-        }
-
-        cursorCountDogs.close();
-        valuesDog.put(DogsContract.Dogs.NAME, dogName.getText().toString());
-        valuesDog.put(DogsContract.Dogs.OWNER, dogOwner.getText().toString());
-        valuesDog.put(DogsContract.Dogs.BREED, dogBreed.getText().toString());
-        valuesDog.put(DogsContract.Dogs.SIZE, checkboxResponse);
-        valuesDog.put(DogsContract.Dogs.MATE_FLAG, switchResponse);
-        valuesDog.put(DogsContract.Dogs.COLOR, dogColor.getText().toString());
-        valuesDog.put(DogsContract.Dogs.AGE, dogAge.getText().toString());
-
-        Uri uriDogs = getContentResolver().insert(DogsContract.CONTENT_URI, valuesDog);
-
-        if (uriDogs != null) {
-            Log.d(TAG, String.format("%s %s %s %s %s %s %s",dogName.getText().toString(),dogOwner.getText().toString(),dogBreed.getText().toString(),checkboxResponse,
-                    switchResponse,dogColor.getText().toString(),dogAge.getText().toString()));
-        }
-        startActivity(new Intent(this,MainActivity.class));
     }
 
     public void onCheckboxClicked(View view) {
@@ -107,9 +69,9 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
                 }
 
                 break;
-            case R.id.dogSizeLarge:
+            case R.id.dogSizeBig:
                 if (checked) {
-                    checkboxResponse = "Large";
+                    checkboxResponse = "Big";
                 }
 
                 break;
@@ -122,9 +84,35 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-                switchResponse = "Y";
+            switchResponse = "Y";
         } else {
-                switchResponse = "N";
+            switchResponse = "N";
         }
+    }
+
+    public void addDog(){
+
+        String name = dogName.getText().toString().trim();
+        String emailOwner = dogOwner.getText().toString().trim();
+        String breed = dogBreed.getText().toString().trim();
+        String color = dogColor.getText().toString().trim();
+        String age = dogAge.getText().toString().trim();
+
+        if (!TextUtils.isEmpty(name)) {
+
+            String id = databaseDog.push().getKey();
+            Dog dog = new Dog(name,emailOwner,breed,age,color,checkboxResponse,switchResponse);
+            databaseDog.child(id).setValue(dog);
+            Toast.makeText(this, "Dog Added!", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(this, "Enter dog details!", Toast.LENGTH_LONG).show();
+        }
+    }
+    @Override
+    public void onClick(View v) {
+
+        addDog();
+        startActivity(new Intent(this,LoginActivity.class));
     }
 }

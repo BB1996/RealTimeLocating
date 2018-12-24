@@ -16,47 +16,55 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+import java.util.List;
 
-    private Button registerUserButton;
-    private EditText emailText;
-    private EditText passwordText;
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private EditText emailText, passwordText;
+    private Button loginButton, registerButton;
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_activity);
+        setContentView(R.layout.login_activity);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
 //        if (firebaseAuth.getCurrentUser() != null) {
 //            finish();
 //            startActivity(new Intent(getApplicationContext(), MapTracking.class));
 //        }
 
         progressDialog = new ProgressDialog(this);
-        registerUserButton = (Button) findViewById(R.id.nextButton);
 
-        emailText = (EditText) findViewById(R.id.emailText);
-        passwordText = (EditText) findViewById(R.id.passwordText);
+        emailText = (EditText) findViewById(R.id.loginEmailText);
+        passwordText = (EditText) findViewById(R.id.loginPasswordText);
 
-        registerUserButton.setOnClickListener(this);
+        loginButton = (Button) findViewById(R.id.loginButton);
+        registerButton = (Button) findViewById(R.id.registerPageButton);
 
+        loginButton.setOnClickListener(this);
+        registerButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == registerUserButton) {
-            registerUser();
-        }
+        switch (view.getId()) {
+            case R.id.loginButton:
+                userLogin();
+                break;
+            case R.id.registerPageButton:
+                startActivity(new Intent(this, RegisterActivity.class));
+                break;
 
+        }
     }
 
-    private void registerUser() {
+    private void userLogin() {
+
         String email = emailText.getText().toString().trim();
         String password = passwordText.getText().toString().trim();
 
@@ -73,17 +81,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         progressDialog.setMessage("Please wait....");
         progressDialog.show();
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Succes!", Toast.LENGTH_SHORT).show();
                             finish();
-                            startActivity(new Intent(getApplicationContext(), RegisterDogActivity.class));
+                            startActivity(new Intent(getApplicationContext(), ListOnline.class));
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Could not register, please try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "User not found or password incorrect!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

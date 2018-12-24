@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
     <uses-feature
         android:name="android.hardware.location"
         android:required="true" />
@@ -28,28 +29,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
         <activity android:name=".RegisterDogActivity" />
-        <provider
-            android:name="com.tutorial.athina.pethood.UsersProvider"
-            android:authorities="com.tutorial.athina.pethood.UsersProvider"
-            android:exported="false" />
-        <provider
-            android:name="com.tutorial.athina.pethood.LoginProvider"
-            android:authorities="com.tutorial.athina.pethood.LoginProvider"
-            android:exported="false" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ListOnline" />
 
-        <provider
-            android:name="com.tutorial.athina.pethood.DogsProvider"
-            android:authorities="com.tutorial.athina.pethood.DogsProvider"
-            android:exported="false" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -67,9 +57,7 @@
             android:value="@string/google_maps_key" />
 
 
-    <activity android:name="com.tutorial.athina.pethood.MapTracking"
-        android:label="@string/title_activity_map_tracking">
-    </activity>
+        <activity android:name="com.tutorial.athina.pethood.MapTracking" />
     </application>
 
 </manifest>
