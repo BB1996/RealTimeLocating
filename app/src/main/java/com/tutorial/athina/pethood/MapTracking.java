@@ -23,9 +23,7 @@ import java.util.ArrayList;
 public class MapTracking extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private String email;
-    Double lat, lng;
-    DatabaseReference locations, counterRef;
+    DatabaseReference locations, counterRef, canisiteRef;
     private ArrayList<String> userList;
 
 
@@ -41,12 +39,13 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         userList = new ArrayList<>();
         locations = FirebaseDatabase.getInstance().getReference().child("Locations");
         counterRef = FirebaseDatabase.getInstance().getReference().child("lastOnline");
+        canisiteRef = FirebaseDatabase.getInstance().getReference().child("canisite");
 
 
     }
 
 
-    private void loadLocationForThisUser() {
+    private void loadLocationsForUsers() {
 
         for (String user : userList) {
             Query user_location = locations.orderByChild("email").equalTo(user);
@@ -63,7 +62,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                         mMap.addMarker(new MarkerOptions()
                                 .position(userLocation)
                                 .title(tracking.getEmail())
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
                     }
 
@@ -77,6 +76,27 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             });
         }
 
+        canisiteRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    Canisite canisite = data.getValue(Canisite.class);
+
+                    LatLng canisitaLocation = new LatLng(canisite.getLat(),canisite.getLng());
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(canisitaLocation)
+                            .title(canisite.getName())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -85,11 +105,11 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if(getIntent() != null){
+        if (getIntent() != null) {
             userList = getIntent().getStringArrayListExtra("userList");
         }
 
-        loadLocationForThisUser();
+        loadLocationsForUsers();
 
     }
 }
