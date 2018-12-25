@@ -24,4 +24,9 @@
     <string name="see_dog_profile">See Dog Profile</string>
     <string name="back">Back</string>
     <string name="see_map">Map</string>
+    <string name="my_dog">My Dog</string>
+    <string name="report_missing_dog">Report Missing Dog</string>
+    <string name="chat">Chat</string>
+    <string name="type_mssg">Type a message ...</string>
+    <string name="hi">hello</string>
 </resources>

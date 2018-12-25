@@ -8,7 +8,10 @@
         android:title="@string/see_map" />
     <item
         android:id="@+id/dogDetails"
-        android:title="@string/see_dog_profile" />
+        android:title="@string/my_dog" />
+    <item
+        android:id="@+id/reportMissingDog"
+        android:title="@string/report_missing_dog" />
 
     <item
         android:id="@+id/action_logout"

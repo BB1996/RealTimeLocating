@@ -40,7 +40,8 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ListOnline" />
         <activity android:name=".DogDetailsActivity" />
-
+        <activity android:name=".DogDetailsAndChatActivity" />
+        <activity android:name=".MessageActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

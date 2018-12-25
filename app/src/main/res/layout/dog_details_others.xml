@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="125dp"
+        android:layout_height="138dp"
+        app:srcCompat="@drawable/doglogo" />
+
+
+    <ListView
+        android:id="@+id/listViewDogs"
+        android:layout_width="405dp"
+        android:layout_height="374dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/backToOnline"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="50dp"
+            android:background="@color/colorAccent"
+            android:text="@string/back"
+            android:textColor="#FFFF" />
+
+        <Button
+            android:id="@+id/chatButton"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+
+            android:layout_marginTop="0dp"
+            android:background="@color/colorAccent"
+            android:text="@string/chat"
+            android:textColor="#FFFF" />
+    </LinearLayout>
+
+</LinearLayout>

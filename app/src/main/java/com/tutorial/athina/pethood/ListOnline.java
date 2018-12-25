@@ -154,8 +154,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                     @Override
                     public void onClick(View view, int position) {
                         if (!model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-                            Intent dogDetails = new Intent(ListOnline.this, DogDetailsActivity.class);
+                            Intent dogDetails = new Intent(ListOnline.this, DogDetailsAndChatActivity.class);
                             dogDetails.putExtra("dogOwner", model.getEmail());
+                            dogDetails.putExtra("myUser",FirebaseAuth.getInstance().getCurrentUser().getEmail());
                             startActivity(dogDetails);
                         }
                     }
@@ -203,6 +204,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 Intent myDogDetails = new Intent(ListOnline.this, DogDetailsActivity.class);
                 myDogDetails.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 startActivity(myDogDetails);
+                break;
+            case R.id.reportMissingDog:
+
                 break;
             case R.id.action_logout:
                 currentUserRef.removeValue();

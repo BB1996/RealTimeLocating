@@ -19,9 +19,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DogDetailsActivity extends AppCompatActivity implements View.OnClickListener {
-    private String dogOwner;
+public class DogDetailsAndChatActivity extends AppCompatActivity implements View.OnClickListener {
+    private String dogOwner, myUser;
     private Button backButton;
+    private Button chatButton;
 
 
     ListView listViewDogs;
@@ -30,14 +31,16 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dog_details_view);
+        setContentView(R.layout.dog_details_others);
 
 
         backButton = (Button) findViewById(R.id.backToOnline);
+        chatButton = (Button) findViewById(R.id.chatButton);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
         dogList = new ArrayList<>();
 
         backButton.setOnClickListener(this);
+        chatButton.setOnClickListener(this);
 
 
     }
@@ -47,6 +50,7 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
         super.onStart();
         if (getIntent() != null) {
             dogOwner = getIntent().getStringExtra("dogOwner");
+            myUser = getIntent().getStringExtra("myUser");
         }
         if (!TextUtils.isEmpty(dogOwner)) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("dog");
@@ -58,7 +62,7 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
                         dogList.add(dog);
                     }
 
-                    DogList adapter = new DogList(DogDetailsActivity.this, dogList);
+                    DogList adapter = new DogList(DogDetailsAndChatActivity.this, dogList);
                     listViewDogs.setAdapter(adapter);
 
                 }
@@ -73,8 +77,19 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v == backButton) {
-            startActivity(new Intent(this, ListOnline.class));
+
+        switch (v.getId()) {
+            case R.id.backToOnline:
+                startActivity(new Intent(this, ListOnline.class));
+                break;
+
+            case R.id.chatButton:
+                Intent chatIntent = new Intent(this, MessageActivity.class);
+                chatIntent.putExtra("dogOwner", dogOwner);
+                chatIntent.putExtra("myUser", myUser);
+                startActivity(chatIntent);
+
         }
+
     }
 }
