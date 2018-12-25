@@ -39,6 +39,7 @@
         <activity android:name=".RegisterDogActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ListOnline" />
+        <activity android:name=".DogDetailsActivity" />
 
 
         <!--

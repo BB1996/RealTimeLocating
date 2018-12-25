@@ -22,4 +22,6 @@
     <string name="join">Join</string>
     <string name="logoutMenu">Logout</string>
     <string name="see_dog_profile">See Dog Profile</string>
+    <string name="back">Back</string>
+    <string name="see_map">Map</string>
 </resources>

@@ -3,7 +3,9 @@
     <item
         android:id="@+id/action_join"
         android:title="@string/join" />
-
+    <item
+        android:id="@+id/action_map"
+        android:title="@string/see_map" />
     <item
         android:id="@+id/dogDetails"
         android:title="@string/see_dog_profile" />
