@@ -15,13 +15,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.Adapters.DogList;
+import com.tutorial.athina.pethood.Models.Dog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DogDetailsAndChatActivity extends AppCompatActivity implements View.OnClickListener {
     private String dogOwner, myUser;
-    private Button backButton;
     private Button chatButton;
 
 
@@ -34,12 +35,12 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
         setContentView(R.layout.dog_details_others);
 
 
-        backButton = (Button) findViewById(R.id.backToOnline);
+
         chatButton = (Button) findViewById(R.id.chatButton);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
         dogList = new ArrayList<>();
 
-        backButton.setOnClickListener(this);
+
         chatButton.setOnClickListener(this);
 
 
@@ -79,9 +80,6 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.backToOnline:
-                startActivity(new Intent(this, ListOnline.class));
-                break;
 
             case R.id.chatButton:
                 Intent chatIntent = new Intent(this, MessageActivity.class);

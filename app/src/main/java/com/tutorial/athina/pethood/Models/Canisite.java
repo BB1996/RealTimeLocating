@@ -1,4 +1,4 @@
-package com.tutorial.athina.pethood;
+package com.tutorial.athina.pethood.Models;
 
 public class Canisite {
 

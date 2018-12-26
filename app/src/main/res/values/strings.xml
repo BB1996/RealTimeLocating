@@ -29,4 +29,16 @@
     <string name="chat">Chat</string>
     <string name="type_mssg">Type a message ...</string>
     <string name="hi">hello</string>
+    <string name="report_missing_dogs">Report Missing Dog</string>
+    <string name="userEmailReport">User</string>
+    <string name="filters">Filters</string>
+    <string name="search_breed_text">Search by Breed</string>
+    <string name="search">Search</string>
+    <string name="searcy_by_size">Searcy By Size</string>
+    <string name="search_by_mating">Search by Mating</string>
+    <string name="mating_dogs">Mating dogs</string>
+    <string name="not_mating_dogs">Not mating dogs</string>
+    <string name="breed_search">Breed</string>
+    <string name="apply_filters">Apply Filters!</string>
+
 </resources>

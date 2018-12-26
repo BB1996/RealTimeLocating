@@ -30,11 +30,14 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.Models.Tracking;
+import com.tutorial.athina.pethood.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,7 @@ import java.util.List;
 public class ListOnline extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    FirebaseUser firebaseUser;
     DatabaseReference onlineRef, currentUserRef, counterRef, locations;
     FirebaseRecyclerAdapter<User, ListOnlineViewHolder> adapter;
 
@@ -136,6 +140,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         });
     }
 
+
     private void updateList() {
 
         FirebaseRecyclerOptions<User> options =
@@ -156,7 +161,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                         if (!model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                             Intent dogDetails = new Intent(ListOnline.this, DogDetailsAndChatActivity.class);
                             dogDetails.putExtra("dogOwner", model.getEmail());
-                            dogDetails.putExtra("myUser",FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                            dogDetails.putExtra("myUser", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                             startActivity(dogDetails);
                         }
                     }
@@ -206,7 +211,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 startActivity(myDogDetails);
                 break;
             case R.id.reportMissingDog:
-
+                startActivity(new Intent(ListOnline.this,MissingDogsActivity.class));
                 break;
             case R.id.action_logout:
                 currentUserRef.removeValue();

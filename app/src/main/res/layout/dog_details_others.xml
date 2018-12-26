@@ -24,23 +24,15 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/backToOnline"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="50dp"
-            android:background="@color/colorAccent"
-            android:text="@string/back"
-            android:textColor="#FFFF" />
 
         <Button
             android:id="@+id/chatButton"
             android:layout_width="100dp"
             android:layout_height="50dp"
 
+            android:layout_marginStart="140dp"
             android:layout_marginTop="0dp"
+            android:layout_marginEnd="50dp"
             android:background="@color/colorAccent"
             android:text="@string/chat"
             android:textColor="#FFFF" />

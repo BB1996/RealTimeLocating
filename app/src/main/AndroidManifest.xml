@@ -42,6 +42,8 @@
         <activity android:name=".DogDetailsActivity" />
         <activity android:name=".DogDetailsAndChatActivity" />
         <activity android:name=".MessageActivity" />
+        <activity android:name=".MissingDogsActivity" />
+        <activity android:name=".FiltersActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -59,7 +61,11 @@
             android:value="@string/google_maps_key" />
 
 
-        <activity android:name="com.tutorial.athina.pethood.MapTracking" />
+        <activity
+            android:name="com.tutorial.athina.pethood.MapTracking"
+            android:configChanges="orientation|screenSize"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

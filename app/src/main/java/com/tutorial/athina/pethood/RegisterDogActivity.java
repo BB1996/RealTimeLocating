@@ -2,6 +2,7 @@ package com.tutorial.athina.pethood;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,8 +13,15 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseError;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.Models.Breeds;
+import com.tutorial.athina.pethood.Models.Dog;
 
 public class RegisterDogActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -24,8 +32,9 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
     private Button registerDogButton;
     private CheckBox dogSmall, dogMedium, dogLarge;
     private Switch mateSwitch;
+    private int duplicateResult = 0;
 
-    DatabaseReference databaseDog;
+    DatabaseReference databaseDog, databaseBreeds;
 
 
     @Override
@@ -47,6 +56,7 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
         mateSwitch.setOnCheckedChangeListener(this);
 
         databaseDog = FirebaseDatabase.getInstance().getReference("dog");
+        databaseBreeds = FirebaseDatabase.getInstance().getReference("breeds");
 
         registerDogButton = (Button) findViewById(R.id.registerButton);
         registerDogButton.setOnClickListener(this);
@@ -103,6 +113,13 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
             String id = databaseDog.push().getKey();
             Dog dog = new Dog(name,emailOwner,breed,age,color,checkboxResponse,switchResponse);
             databaseDog.child(id).setValue(dog);
+
+            if(checkBreedDuplicates(breed) != 1){
+                String idBreed = databaseBreeds.push().getKey();
+                Breeds breeds = new Breeds(breed);
+                databaseBreeds.child(idBreed).setValue(breeds);
+            }
+
             Toast.makeText(this, "Dog Added!", Toast.LENGTH_LONG).show();
 
         } else {
@@ -113,6 +130,29 @@ public class RegisterDogActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
 
         addDog();
+        duplicateResult = 0;
         startActivity(new Intent(this,LoginActivity.class));
     }
+    private int checkBreedDuplicates(final String breed){
+
+        databaseBreeds.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    if (data.child("name").equals(breed)) {
+                        duplicateResult = 1;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
+        return duplicateResult;
+    }
 }
+

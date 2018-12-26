@@ -1,4 +1,4 @@
-package com.tutorial.athina.pethood;
+package com.tutorial.athina.pethood.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.tutorial.athina.pethood.Models.Dog;
+import com.tutorial.athina.pethood.R;
 
 import java.util.List;
 
