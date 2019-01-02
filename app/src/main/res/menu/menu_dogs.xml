@@ -4,6 +4,9 @@
         android:id="@+id/action_join"
         android:title="@string/join" />
     <item
+        android:id="@+id/itemServiceStart"
+        android:title="@string/refresh" />
+    <item
         android:id="@+id/action_map"
         android:title="@string/see_map" />
     <item
@@ -12,6 +15,9 @@
     <item
         android:id="@+id/reportMissingDog"
         android:title="@string/report_missing_dog" />
+    <item
+        android:id="@+id/editInterval"
+        android:title="@string/refresh_interval" />
 
     <item
         android:id="@+id/action_logout"

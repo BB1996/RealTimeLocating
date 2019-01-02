@@ -1,15 +1,20 @@
 package com.tutorial.athina.pethood;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +29,7 @@ import java.util.List;
 public class DogDetailsActivity extends AppCompatActivity implements View.OnClickListener {
     private String dogOwner;
     private Button backButton;
+    private ImageView logoView;
 
 
     ListView listViewDogs;
@@ -37,6 +43,7 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
 
         backButton = (Button) findViewById(R.id.backToOnline);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
+        logoView = (ImageView) findViewById(R.id.imageViewLogo);
         dogList = new ArrayList<>();
 
         backButton.setOnClickListener(this);
@@ -57,6 +64,14 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Dog dog = data.getValue(Dog.class);
+                        Glide.with(getApplicationContext()).load(dog.getDogPhoto()).into(logoView);
+                        if(dog.getDogMateFlag().equals("Y"))
+                        {
+                            dog.setDogMateFlag("Looking to mate");
+                        }
+                        else{
+                            dog.setDogMateFlag("Not looking to mate");
+                        }
                         dogList.add(dog);
                     }
 

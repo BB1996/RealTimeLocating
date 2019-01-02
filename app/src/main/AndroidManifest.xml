@@ -9,6 +9,9 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -44,7 +47,23 @@
         <activity android:name=".MessageActivity" />
         <activity android:name=".MissingDogsActivity" />
         <activity android:name=".FiltersActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
 
+
+        <service android:name=".NotificationService"/>
+
+
+        <receiver android:name="com.tutorial.athina.pethood.Notifications.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.tutorial.athina.pethood.action.REFRESH_INTERVAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </receiver>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

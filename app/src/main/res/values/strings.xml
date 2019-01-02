@@ -40,5 +40,21 @@
     <string name="not_mating_dogs">Not mating dogs</string>
     <string name="breed_search">Breed</string>
     <string name="apply_filters">Apply Filters!</string>
+    <string name="refresh">Refresh</string>
+    <string name="interval_summary">How frequently should data refresh?</string>
+    <string name="interval_title">Refresh interval</string>
+    <string name="refresh_interval">Refresh Interval</string>
+    <string name="edit_doggo">Edit dog</string>
+    <string name="send_mail">Send mail</string>
+    <string name="please_enter_mail">Please enter mail</string>
+    <string name="dufyp">Did you forgot your password?</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="phone_nr">Phone number</string>
+    <string name="add_picture">Add Picture</string>
+    <string name="tap_to_add_photo">Tap to on the camera to add photo</string>
+    <string name="upload">Upload</string>
+    <string name="re_enter_password">Re-enter password</string>
 
 </resources>

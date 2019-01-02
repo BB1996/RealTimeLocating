@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +26,7 @@ import java.util.List;
 public class DogDetailsAndChatActivity extends AppCompatActivity implements View.OnClickListener {
     private String dogOwner, myUser;
     private Button chatButton;
+    private ImageView logoView;
 
 
     ListView listViewDogs;
@@ -35,9 +38,9 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
         setContentView(R.layout.dog_details_others);
 
 
-
         chatButton = (Button) findViewById(R.id.chatButton);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
+        logoView = (ImageView) findViewById(R.id.imageViewLogo);
         dogList = new ArrayList<>();
 
 
@@ -60,6 +63,12 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Dog dog = data.getValue(Dog.class);
+                        Glide.with(getApplicationContext()).load(dog.getDogPhoto()).into(logoView);
+                        if (dog.getDogMateFlag().equals("Y")) {
+                            dog.setDogMateFlag("Looking to mate");
+                        } else {
+                            dog.setDogMateFlag("Not looking to mate");
+                        }
                         dogList.add(dog);
                     }
 

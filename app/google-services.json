@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:146732108798:android:97ea82f190c6ae3a",
+        "android_client_info": {
+          "package_name": "com.project.chs.pethood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146732108798-e7dlsmuk28cmmtg4daafvbuj5edc3um9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.chs.pethood",
+            "certificate_hash": "79a44793742fc50bff892534d2923b2190cb04c7"
+          }
+        },
+        {
+          "client_id": "146732108798-mrgkl0o1fb8dk2gi8q698r2c8cn59oca.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN_kOnJcQysbAK3j523sKsJV1FLYyqm2g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146732108798-mrgkl0o1fb8dk2gi8q698r2c8cn59oca.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:146732108798:android:6f8dd711f070d3f4",
         "android_client_info": {
           "package_name": "com.tutorial.athina.realtimelocating"
@@ -20,6 +64,14 @@
           "android_info": {
             "package_name": "com.tutorial.athina.realtimelocating",
             "certificate_hash": "79a44793742fc50bff892534d2923b2190cb04c7"
+          }
+        },
+        {
+          "client_id": "146732108798-po72n2aeguhffuj17q8faevt4ggle1e7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tutorial.athina.realtimelocating",
+            "certificate_hash": "fa04307f136f00bb9bf0b95f8319017f688f2116"
           }
         },
         {

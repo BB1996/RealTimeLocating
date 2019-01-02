@@ -199,6 +199,10 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
             case R.id.action_join:
                 counterRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getEmail(), "Online"));
+                startActivity(new Intent(this,ListOnline.class));
+                break;
+            case R.id.itemServiceStart:
+                startService(new Intent(this, NotificationService.class));
                 break;
             case R.id.action_map:
                 Intent map = new Intent(this, MapTracking.class);
@@ -212,6 +216,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 break;
             case R.id.reportMissingDog:
                 startActivity(new Intent(ListOnline.this,MissingDogsActivity.class));
+                break;
+            case R.id.editInterval:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.action_logout:
                 currentUserRef.removeValue();

@@ -8,11 +8,31 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="131dp"
-        android:layout_height="155dp"
-        app:srcCompat="@drawable/doglogo" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tapToAddPhotoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/tap_to_add_photo"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+
+        <ImageView
+            android:id="@+id/imageViewCamera"
+            android:layout_width="131dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/icon_camera" />
+    </LinearLayout>
+
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -83,9 +103,11 @@
             android:inputType="textEmailAddress" />
 
     </android.support.design.widget.TextInputLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="39dp"
         android:orientation="horizontal">
 
         <EditText
@@ -102,35 +124,35 @@
             android:id="@+id/dogSizeSmall"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/small"
-            android:onClick="onCheckboxClicked"/>
+            android:onClick="onCheckboxClicked"
+            android:text="@string/small" />
 
         <CheckBox
             android:id="@+id/dogSizeMedium"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/medium"
-            android:onClick="onCheckboxClicked"/>
+            android:onClick="onCheckboxClicked"
+            android:text="@string/medium" />
 
         <CheckBox
             android:id="@+id/dogSizeBig"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/big"
-            android:onClick="onCheckboxClicked"/>
+            android:onClick="onCheckboxClicked"
+            android:text="@string/big" />
 
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="49dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/matingText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="288dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
@@ -146,13 +168,15 @@
 
     </LinearLayout>
 
+
     <Button
         android:id="@+id/registerButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
         android:layout_marginTop="0dp"
         android:background="#9b6191"
         android:text="@string/register"
         android:textColor="#FFFF" />
+
 
 </LinearLayout>

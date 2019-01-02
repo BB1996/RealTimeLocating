@@ -46,13 +46,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="107dp"
+            android:layout_height="31dp"
             android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
             android:background="#9b6191"
@@ -61,8 +61,8 @@
 
         <Button
             android:id="@+id/registerPageButton"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="109dp"
+            android:layout_height="31dp"
             android:layout_marginStart="70dp"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="30dp"
@@ -71,5 +71,22 @@
             android:textColor="#FFFF" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/forgotPassText"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:text="@string/dufyp"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/forgotPassButton"
+        android:layout_width="109dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
+        android:background="#9b6191"
+        android:text="@string/forgot_password"
+        android:textColor="#FFFF" />
 
 </LinearLayout>

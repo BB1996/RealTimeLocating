@@ -15,17 +15,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.tutorial.athina.pethood.Models.Owner;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button registerUserButton;
     private EditText emailText;
-    private EditText passwordText;
+    private EditText passwordText, passwordText2;
+    private EditText nameText, surnameText, phoneText;
 
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
-
+    private DatabaseReference ownerRef;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.register_activity);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        ownerRef = FirebaseDatabase.getInstance().getReference().child("Owners");
 //        if (firebaseAuth.getCurrentUser() != null) {
 //            finish();
 //            startActivity(new Intent(getApplicationContext(), MapTracking.class));
@@ -43,6 +49,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         emailText = (EditText) findViewById(R.id.emailText);
         passwordText = (EditText) findViewById(R.id.passwordText);
+        passwordText2 = (EditText) findViewById(R.id.passwordText2);
+        nameText = (EditText) findViewById(R.id.nameUser);
+        surnameText = (EditText) findViewById(R.id.surnameUser);
+        phoneText = (EditText) findViewById(R.id.phoneUser);
 
         registerUserButton.setOnClickListener(this);
 
@@ -57,8 +67,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void registerUser() {
-        String email = emailText.getText().toString().trim();
+        email = emailText.getText().toString().trim();
         String password = passwordText.getText().toString().trim();
+        String password2 = passwordText2.getText().toString().trim();
+
+        String name = nameText.getText().toString().trim();
+        String surname = surnameText.getText().toString().trim();
+        String phone = phoneText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Please enter email!", Toast.LENGTH_LONG).show();
@@ -69,9 +84,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Please enter password!", Toast.LENGTH_LONG).show();
             return;
         }
-
+        if (!password.equals(password2)) {
+            Toast.makeText(this, "Passwords doesn't match!", Toast.LENGTH_LONG).show();
+            return;
+        }
         progressDialog.setMessage("Please wait....");
         progressDialog.show();
+
+        String id = ownerRef.push().getKey();
+        Owner owner = new Owner(name, surname, phone, email);
+        ownerRef.child(id).setValue(owner);
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -81,9 +103,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Succes!", Toast.LENGTH_SHORT).show();
                             finish();
-                            startActivity(new Intent(getApplicationContext(), RegisterDogActivity.class));
+                            Intent registerIntent = new Intent(getApplicationContext(), RegisterDogActivity.class);
+                            startActivity(registerIntent);
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Could not register, please try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "Account already created!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
