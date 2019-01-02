@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_search_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_store_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,9 +33,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="searchimg" />
+                                      <entry key="outputName" value="petshop" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ae8a94" />
+                                      <entry key="themeColor" value="ae5f2f" />
                                     </map>
                                   </option>
                                 </PersistentState>

@@ -10,7 +10,7 @@
         android:id="@+id/toolbarMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#000"
+        android:background="#9b6191"
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@android:color/white" />
 

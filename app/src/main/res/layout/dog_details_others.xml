@@ -33,7 +33,7 @@
             android:layout_marginStart="140dp"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="50dp"
-            android:background="@color/colorAccent"
+            android:background="#9b6191"
             android:text="@string/chat"
             android:textColor="#FFFF" />
     </LinearLayout>

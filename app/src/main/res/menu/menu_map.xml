@@ -8,6 +8,13 @@
         android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="50"
         android:title="@string/filters" />
+    <item
+        android:id="@+id/action_back_online"
+        tools:ignore="AppCompatResource"
+        tools:showAsAction="always"
+        android:icon="@android:drawable/ic_media_previous"
+        android:orderInCategory="50"
+        android:title="Back" />
 
 
 </menu>
