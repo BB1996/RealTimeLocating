@@ -207,6 +207,8 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
             case R.id.action_map:
                 Intent map = new Intent(this, MapTracking.class);
                 map.putStringArrayListExtra("userList", (ArrayList<String>) userList);
+                map.putExtra("latLng",mLastLocation.getLatitude());
+                map.putExtra("lngLat",mLastLocation.getLongitude());
                 startActivity(map);
                 break;
             case R.id.dogDetails:

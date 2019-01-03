@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:hint="@string/dog_name"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/email_owner"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/dogBreedView"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/breed"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/age"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
 
     <TextView
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/color"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/dogSizeView"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/size"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
 
     <TextView
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/mate"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textSize="18sp" />
 
 
 </LinearLayout>

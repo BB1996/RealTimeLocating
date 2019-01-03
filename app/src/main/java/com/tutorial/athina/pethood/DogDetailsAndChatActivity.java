@@ -25,7 +25,7 @@ import java.util.List;
 
 public class DogDetailsAndChatActivity extends AppCompatActivity implements View.OnClickListener {
     private String dogOwner, myUser;
-    private Button chatButton;
+    private Button chatButton, backButton;
     private ImageView logoView;
 
 
@@ -39,6 +39,7 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
 
 
         chatButton = (Button) findViewById(R.id.chatButton);
+        backButton = (Button) findViewById(R.id.backFromChat);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
         logoView = (ImageView) findViewById(R.id.imageViewLogo);
         dogList = new ArrayList<>();
@@ -64,10 +65,12 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Dog dog = data.getValue(Dog.class);
                         Glide.with(getApplicationContext()).load(dog.getDogPhoto()).into(logoView);
-                        if (dog.getDogMateFlag().equals("Y")) {
-                            dog.setDogMateFlag("Looking to mate");
-                        } else {
-                            dog.setDogMateFlag("Not looking to mate");
+                        if(dog.getDogMateFlag()!= null)
+                        {
+                            dog.setDogMateFlag("to mate");
+                        }
+                        else{
+                            dog.setDogMateFlag("not to mate");
                         }
                         dogList.add(dog);
                     }
@@ -95,7 +98,11 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
                 chatIntent.putExtra("dogOwner", dogOwner);
                 chatIntent.putExtra("myUser", myUser);
                 startActivity(chatIntent);
+                break;
 
+            case R.id.backFromChat:
+                startActivity(new Intent(this, ListOnline.class));
+                break;
         }
 
     }

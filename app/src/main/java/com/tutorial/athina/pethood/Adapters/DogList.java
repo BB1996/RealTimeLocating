@@ -43,13 +43,13 @@ public class DogList extends ArrayAdapter {
 
         Dog dog = dogList.get(position);
 
-        textViewName.setText(dog.getDogName());
-        textViewOwner.setText(dog.getDogOwner());
-        textViewBreed.setText(dog.getDogBreed());
-        textViewAge.setText(dog.getDogAge());
-        textViewSize.setText(dog.getDogSize());
-        textViewColor.setText(dog.getDogColor());
-        textViewMating.setText(dog.getDogMateFlag());
+        textViewName.setText("My name: \n" + dog.getDogName());
+        textViewOwner.setText("Owner's email: \n" + dog.getDogOwner());
+        textViewBreed.setText("My breed: \n" + dog.getDogBreed());
+        textViewAge.setText("My age: \n" + dog.getDogAge());
+        textViewSize.setText("I'm this size: \n" + dog.getDogSize());
+        textViewColor.setText("And this color: \n" + dog.getDogColor());
+        textViewMating.setText("Looking: \n" + dog.getDogMateFlag());
 
         return listViewItem;
 

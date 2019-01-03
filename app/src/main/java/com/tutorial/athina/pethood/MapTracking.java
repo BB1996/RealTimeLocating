@@ -1,6 +1,7 @@
 package com.tutorial.athina.pethood;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.Models.AbandonedDog;
 import com.tutorial.athina.pethood.Models.Canisite;
 import com.tutorial.athina.pethood.Models.Dog;
 import com.tutorial.athina.pethood.Models.PetShop;
@@ -32,13 +38,17 @@ import java.util.ArrayList;
 public class MapTracking extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef;
+    DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef, abadonedDogRef;
     private ArrayList<String> userList;
     private ArrayList<String> filterUserList;
     String breed, size, mating;
     private static final String dogBreed = "dogBreed";
     private static final String dogMateFlag = "dogMateFlag";
     private static final String dogSize = "dogSize";
+    private Button abandonedButoon;
+    private Location currentLocation;
+    private GoogleApiClient googleApiClient;
+    private Double latLng, lngLat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         toolbar.setTitle("Doggy Map");
         this.setSupportActionBar(toolbar);
 
+        abandonedButoon = (Button) findViewById(R.id.abadonedDogBtn);
+
         userList = new ArrayList<>();
         filterUserList = new ArrayList<>();
 
@@ -62,6 +74,20 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         canisiteRef = FirebaseDatabase.getInstance().getReference().child("canisite");
         dogsRef = FirebaseDatabase.getInstance().getReference().child("dog");
         petShopRef = FirebaseDatabase.getInstance().getReference().child("petShops");
+        abadonedDogRef = FirebaseDatabase.getInstance().getReference().child("abandonedDog");
+
+
+        abandonedButoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                String id = abadonedDogRef.push().getKey();
+                AbandonedDog abandonedDog = new AbandonedDog(latLng, lngLat);
+                abadonedDogRef.child(id).setValue(abandonedDog);
+
+            }
+        });
 
 
     }
@@ -100,6 +126,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
         loadCanisite();
         loadPetShops();
+        loadAbandonedDog();
 
 
     }
@@ -121,6 +148,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         }
         loadCanisite();
         loadPetShops();
+        loadAbandonedDog();
     }
 
     private void allFiltersMap(final String user) {
@@ -214,6 +242,29 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    private void loadAbandonedDog() {
+        abadonedDogRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    AbandonedDog abandonedDog = data.getValue(AbandonedDog.class);
+
+                    LatLng abandonedDogPosition = new LatLng(abandonedDog.getLat(), abandonedDog.getLng());
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(abandonedDogPosition)
+                            .title("Abandoned Dog")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.exclamation)));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void loadPersonalizedFilterMap(final String user, String column, String searchPattern) {
         Query user_breeds = dogsRef.orderByChild(column).equalTo(searchPattern);
         user_breeds.addValueEventListener(new ValueEventListener() {
@@ -274,8 +325,10 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                 mating = getIntent().getStringExtra("mating");
             }
             loadPersonalizeMap();
-        } else if (getIntent().hasExtra("userList")) {
+        } else if (getIntent().hasExtra("userList") && getIntent().hasExtra("latLng") && getIntent().hasExtra("lngLat")) {
             userList = getIntent().getStringArrayListExtra("userList");
+            latLng = getIntent().getDoubleExtra("latLng",0);
+            lngLat = getIntent().getDoubleExtra("lngLat",0);
             loadLocationsForUsers();
         }
 
@@ -307,4 +360,5 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

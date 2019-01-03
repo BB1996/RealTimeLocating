@@ -56,5 +56,6 @@
     <string name="tap_to_add_photo">Tap to on the camera to add photo</string>
     <string name="upload">Upload</string>
     <string name="re_enter_password">Re-enter password</string>
+    <string name="abandoned_dog_alert">Abandoned Dog Alert</string>
 
 </resources>

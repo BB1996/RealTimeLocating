@@ -65,12 +65,12 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Dog dog = data.getValue(Dog.class);
                         Glide.with(getApplicationContext()).load(dog.getDogPhoto()).into(logoView);
-                        if(dog.getDogMateFlag().equals("Y"))
+                        if(dog.getDogMateFlag()!= null)
                         {
-                            dog.setDogMateFlag("Looking to mate");
+                            dog.setDogMateFlag("to mate");
                         }
                         else{
-                            dog.setDogMateFlag("Not looking to mate");
+                            dog.setDogMateFlag("not to mate");
                         }
                         dogList.add(dog);
                     }
