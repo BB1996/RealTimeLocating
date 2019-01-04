@@ -65,7 +65,7 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Dog dog = data.getValue(Dog.class);
                         Glide.with(getApplicationContext()).load(dog.getDogPhoto()).into(logoView);
-                        if(dog.getDogMateFlag()!= null)
+                        if(dog.getDogMateFlag()!= null && dog.getDogMateFlag().equals("Y"))
                         {
                             dog.setDogMateFlag("to mate");
                         }

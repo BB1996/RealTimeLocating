@@ -47,7 +47,7 @@
     <string name="edit_doggo">Edit dog</string>
     <string name="send_mail">Send mail</string>
     <string name="please_enter_mail">Please enter mail</string>
-    <string name="dufyp">Did you forgot your password?</string>
+    <string name="dufyp">Did you forget your password?</string>
     <string name="forgot_password">Forgot password</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
@@ -57,5 +57,14 @@
     <string name="upload">Upload</string>
     <string name="re_enter_password">Re-enter password</string>
     <string name="abandoned_dog_alert">Abandoned Dog Alert</string>
+    <string name="edit">Edit</string>
+    <string name="ent_new_value">Enter new value</string>
+    <string name="update">Update</string>
+    <string name="edit_name">Edit Name</string>
+    <string name="edit_breed">Edit Breed</string>
+    <string name="edit_age">Edit Age</string>
+    <string name="edit_color">Edit Color</string>
+    <string name="edit_size">Edit Size</string>
+    <string name="edit_mate">Edit Mating</string>
 
 </resources>

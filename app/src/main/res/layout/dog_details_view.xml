@@ -27,21 +27,13 @@
             android:id="@+id/backToOnline"
             android:layout_width="106dp"
             android:layout_height="31dp"
-            android:layout_marginStart="85dp"
+            android:layout_marginStart="140dp"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="15dp"
             android:background="#9b6191"
             android:text="@string/back"
             android:textColor="#FFFF" />
 
-        <Button
-            android:id="@+id/editDog"
-            android:layout_width="103dp"
-            android:layout_height="31dp"
-            android:layout_marginTop="0dp"
-            android:background="#9b6191"
-            android:text="@string/edit_doggo"
-            android:textColor="#FFFF" />
     </LinearLayout>
 
 
