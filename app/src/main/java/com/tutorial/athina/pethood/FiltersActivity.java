@@ -30,7 +30,7 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> userList;
     private ArrayList<String> breedList;
     private SpinnerDialog spinnerDialog;
-    private Button buttonSearchBreed;
+    private Button buttonSearchBreed, backToMap;
     private Double latLng, lngLat;
 
     private CheckBox dogSmall, dogMedium, dogLarge, matingYes, matingNo;
@@ -58,7 +58,18 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
 
         applyFilters = (Button) findViewById(R.id.buttonApplyFilters);
         buttonSearchBreed = (Button) findViewById(R.id.searchBreedButton);
+        backToMap = (Button) findViewById(R.id.backToOnline);
+        backToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FiltersActivity.this, MapTracking.class);
+                intent.putExtra("userList", userList);
+                intent.putExtra("latLng", latLng);
+                intent.putExtra("lngLat", lngLat);
+                startActivity(intent);
 
+            }
+        });
         spinnerDialog = new SpinnerDialog(FiltersActivity.this, breedList, "Select Breed");
         spinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
             @Override
@@ -70,8 +81,8 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
 
         if (getIntent().hasExtra("userList")) {
             userList = getIntent().getStringArrayListExtra("userList");
-            latLng = getIntent().getDoubleExtra("latLng",0);
-            lngLat = getIntent().getDoubleExtra("lngLat",0);
+            latLng = getIntent().getDoubleExtra("latLng", 0);
+            lngLat = getIntent().getDoubleExtra("lngLat", 0);
         }
 
 
@@ -152,8 +163,8 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
             filtersIntent.putExtra("breed", checkBreed);
             filtersIntent.putExtra("mating", checkboxMating);
             filtersIntent.putStringArrayListExtra("userList", (ArrayList<String>) userList);
-            filtersIntent.putExtra("latLng",latLng);
-            filtersIntent.putExtra("lngLat",lngLat);
+            filtersIntent.putExtra("latLng", latLng);
+            filtersIntent.putExtra("lngLat", lngLat);
             startActivity(filtersIntent);
         }
     }

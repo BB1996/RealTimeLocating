@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.tutorial.athina.pethood.Adapters.OwnerList;
 import com.tutorial.athina.pethood.Models.Owner;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private ImageView logoView;
     private String ownerID;
     private String ownerName, ownerSurname, ownerPhone, ownerPhoto;
+    private TextView textview;
 
 
     ListView listViewUser;
@@ -44,11 +47,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_details_view);
+        setContentView(R.layout.user_details_view_personal);
 
         backButton = (Button) findViewById(R.id.backToOnline);
         listViewUser = (ListView) findViewById(R.id.listViewUser);
         logoView = (ImageView) findViewById(R.id.imageViewLogo);
+        textview = (TextView) findViewById(R.id.textViewUser);
+
         ownerList = new ArrayList<>();
 
         backButton.setOnClickListener(this);

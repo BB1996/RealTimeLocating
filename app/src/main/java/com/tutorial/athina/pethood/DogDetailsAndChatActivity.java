@@ -48,6 +48,7 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
 
         chatButton.setOnClickListener(this);
         seeOwnerButton.setOnClickListener(this);
+        backButton.setOnClickListener(this);
 
 
     }
@@ -109,6 +110,7 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
             case R.id.seeOwnerButton:
                 Intent owner = new Intent(this,UserProfileActivityOther.class);
                 owner.putExtra("dogOwner", dogOwner);
+                owner.putExtra("myUser",myUser);
                 startActivity(owner);
                 break;
         }

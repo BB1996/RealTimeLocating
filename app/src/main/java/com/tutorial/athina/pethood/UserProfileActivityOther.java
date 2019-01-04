@@ -25,7 +25,7 @@ import java.util.List;
 
 public class UserProfileActivityOther extends AppCompatActivity implements View.OnClickListener {
 
-    private String dogOwner;
+    private String dogOwner,myUser;
     private Button backButton;
     private ImageView logoView;
     private String ownerID;
@@ -52,7 +52,10 @@ public class UserProfileActivityOther extends AppCompatActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.backToOnline:
-                startActivity(new Intent(this, ListOnline.class));
+                Intent intent = new Intent(this,DogDetailsAndChatActivity.class);
+                intent.putExtra("dogOwner",dogOwner);
+                intent.putExtra("myUser",myUser);
+                startActivity(intent);
                 break;
 
         }
@@ -63,6 +66,7 @@ public class UserProfileActivityOther extends AppCompatActivity implements View.
         super.onStart();
         if (getIntent() != null) {
             dogOwner = getIntent().getStringExtra("dogOwner");
+            myUser = getIntent().getStringExtra("myUser");
         }
         if (!TextUtils.isEmpty(dogOwner)) {
             final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Owners");

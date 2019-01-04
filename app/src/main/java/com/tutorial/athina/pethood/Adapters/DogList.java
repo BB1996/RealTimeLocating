@@ -47,8 +47,8 @@ public class DogList extends ArrayAdapter {
         textViewOwner.setText("Owner's email: \n" + dog.getDogOwner());
         textViewBreed.setText("My breed: \n" + dog.getDogBreed());
         textViewAge.setText("My age: \n" + dog.getDogAge());
-        textViewSize.setText("I'm this size: \n" + dog.getDogSize());
-        textViewColor.setText("And this color: \n" + dog.getDogColor());
+        textViewSize.setText("And this size: \n" + dog.getDogSize());
+        textViewColor.setText("I'm this color: \n" + dog.getDogColor());
         textViewMating.setText("Looking: \n" + dog.getDogMateFlag());
 
         return listViewItem;

@@ -35,6 +35,7 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
     private ImageView logoView;
     private String dogID;
     private String dogName, dogBreed, dogAge, dogSize, dogColor, dogMating, dogPhoto;
+    private TextView textView;
 
 
     ListView listViewDogs;
@@ -49,6 +50,7 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
         backButton = (Button) findViewById(R.id.backToOnline);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
         logoView = (ImageView) findViewById(R.id.imageViewLogo);
+        textView = (TextView) findViewById(R.id.textViewDog);
         dogList = new ArrayList<>();
 
         backButton.setOnClickListener(this);

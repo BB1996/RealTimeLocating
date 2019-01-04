@@ -30,10 +30,11 @@ public class NotificationService extends IntentService {
     String myUser;
     BroadcastReceiver broadcastReceiver;
     NotificationHelper helper;
-    String lastPost1;
+    private static String lastPost1;
     String lastPost2;
     Query lastReportQuery, lastMessageQuery;
     ValueEventListener lastReportQueryListener, lastMessageQueryListener;
+    boolean notify ;
 
     public NotificationService() {
         super(TAG);
@@ -45,6 +46,7 @@ public class NotificationService extends IntentService {
 
         lastPost1 = "";
         lastPost2 = "";
+        notify = false;
         helper = new NotificationHelper(this);
         broadcastReceiver = new BootReceiver();
 
@@ -75,6 +77,7 @@ public class NotificationService extends IntentService {
                         lastPost1 = missingDog.getMessage();
                         Notification.Builder builder = helper.getPethoodChannelNotification("Missing dog Alert from " + missingDog.getSender(), missingDog.getMessage());
                         helper.getManager().notify(new Random().nextInt(), builder.build());
+                        notify = true;
                     }
 
 

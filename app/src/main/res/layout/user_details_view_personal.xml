@@ -13,6 +13,12 @@
         android:layout_height="125dp"
         app:srcCompat="@drawable/doglogo" />
 
+    <TextView
+        android:id="@+id/textViewUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/please_click_informations_to_update"
+        android:textAlignment="center" />
 
     <ListView
         android:id="@+id/listViewUser"
@@ -25,8 +31,8 @@
 
         <Button
             android:id="@+id/backToOnline"
-            android:layout_width="106dp"
-            android:layout_height="31dp"
+            android:layout_width="109dp"
+            android:layout_height="30dp"
             android:layout_marginStart="140dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"

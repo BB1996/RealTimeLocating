@@ -70,5 +70,7 @@
     <string name="see_owner">See Owner</string>
     <string name="edit_surname">Edit Surname</string>
     <string name="edit_phone">Edit Phone</string>
+    <string name="please_click_informations_to_update">Please click informations to update!</string>
+    <string name="edit_mating_y_n">Edit Mating (Y/N)</string>
 
 </resources>

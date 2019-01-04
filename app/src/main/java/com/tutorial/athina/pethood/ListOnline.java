@@ -79,7 +79,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         userList = new ArrayList<String>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
-        toolbar.setTitle("Online Dogs");
+        toolbar.setTitle("Online");
         setSupportActionBar(toolbar);
 
         locations = FirebaseDatabase.getInstance().getReference("Locations");
