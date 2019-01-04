@@ -31,6 +31,7 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> breedList;
     private SpinnerDialog spinnerDialog;
     private Button buttonSearchBreed;
+    private Double latLng, lngLat;
 
     private CheckBox dogSmall, dogMedium, dogLarge, matingYes, matingNo;
 
@@ -69,6 +70,8 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
 
         if (getIntent().hasExtra("userList")) {
             userList = getIntent().getStringArrayListExtra("userList");
+            latLng = getIntent().getDoubleExtra("latLng",0);
+            lngLat = getIntent().getDoubleExtra("lngLat",0);
         }
 
 
@@ -149,6 +152,8 @@ public class FiltersActivity extends AppCompatActivity implements View.OnClickLi
             filtersIntent.putExtra("breed", checkBreed);
             filtersIntent.putExtra("mating", checkboxMating);
             filtersIntent.putStringArrayListExtra("userList", (ArrayList<String>) userList);
+            filtersIntent.putExtra("latLng",latLng);
+            filtersIntent.putExtra("lngLat",lngLat);
             startActivity(filtersIntent);
         }
     }

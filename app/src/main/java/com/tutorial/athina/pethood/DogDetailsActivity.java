@@ -31,7 +31,7 @@ import java.util.List;
 
 public class DogDetailsActivity extends AppCompatActivity implements View.OnClickListener {
     private String dogOwner;
-    private Button backButton, editDogButton;
+    private Button backButton;
     private ImageView logoView;
     private String dogID;
     private String dogName, dogBreed, dogAge, dogSize, dogColor, dogMating, dogPhoto;

@@ -49,8 +49,8 @@
         <activity android:name=".FiltersActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ForgotPasswordActivity" />
-
-
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".UserProfileActivityOther" />
 
         <service android:name=".NotificationService"/>
 

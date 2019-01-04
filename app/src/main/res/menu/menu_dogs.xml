@@ -10,8 +10,12 @@
         android:id="@+id/action_map"
         android:title="@string/see_map" />
     <item
+        android:id="@+id/userDetails"
+        android:title="@string/my_profile" />
+    <item
         android:id="@+id/dogDetails"
         android:title="@string/my_dog" />
+
     <item
         android:id="@+id/reportMissingDog"
         android:title="@string/report_missing_dog" />

@@ -211,6 +211,11 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 map.putExtra("lngLat",mLastLocation.getLongitude());
                 startActivity(map);
                 break;
+            case R.id.userDetails:
+                Intent myUserProfile = new Intent(ListOnline.this, UserProfileActivity.class);
+                myUserProfile.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                startActivity(myUserProfile);
+                break;
             case R.id.dogDetails:
                 Intent myDogDetails = new Intent(ListOnline.this, DogDetailsActivity.class);
                 myDogDetails.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());

@@ -21,7 +21,7 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText emailText, passwordText;
-    private Button loginButton, registerButton;
+    private Button loginButton, registerButton,forgotPasswordButton;
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
@@ -45,9 +45,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         loginButton = (Button) findViewById(R.id.loginButton);
         registerButton = (Button) findViewById(R.id.registerPageButton);
+        forgotPasswordButton = (Button) findViewById(R.id.forgotPassButton);
 
         loginButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
+        forgotPasswordButton.setOnClickListener(this);
     }
 
     @Override

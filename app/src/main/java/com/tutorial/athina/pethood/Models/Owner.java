@@ -2,16 +2,18 @@ package com.tutorial.athina.pethood.Models;
 
 public class Owner {
 
-    private String name, surname, phone, email;
+    private String name, surname, phone, email, profileImageUrl;
 
-    public Owner(String name, String surname, String phone,String email) {
+    public Owner() {
+
+    }
+
+    public Owner(String name, String surname, String phone, String email, String profileImageUrl) {
         this.name = name;
         this.surname = surname;
         this.phone = phone;
         this.email = email;
-    }
-
-    public Owner() {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getName() {
@@ -28,5 +30,9 @@ public class Owner {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }

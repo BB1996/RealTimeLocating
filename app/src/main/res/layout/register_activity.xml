@@ -7,12 +7,30 @@
     android:background="#FFF"
     >
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="131dp"
-        android:layout_height="166dp"
-        app:srcCompat="@drawable/doglogo" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tapToAddPhotoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/tap_to_add_photo"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+
+        <ImageView
+            android:id="@+id/imageViewCamera"
+            android:layout_width="131dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/icon_camera" />
+    </LinearLayout>
 
 
     <android.support.design.widget.TextInputLayout

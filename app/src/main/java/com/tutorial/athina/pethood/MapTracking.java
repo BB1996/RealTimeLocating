@@ -32,13 +32,14 @@ import com.tutorial.athina.pethood.Models.Canisite;
 import com.tutorial.athina.pethood.Models.Dog;
 import com.tutorial.athina.pethood.Models.PetShop;
 import com.tutorial.athina.pethood.Models.Tracking;
+import com.tutorial.athina.pethood.Models.Vet;
 
 import java.util.ArrayList;
 
 public class MapTracking extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef, abadonedDogRef;
+    DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef, abadonedDogRef, vetRef;
     private ArrayList<String> userList;
     private ArrayList<String> filterUserList;
     String breed, size, mating;
@@ -46,8 +47,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     private static final String dogMateFlag = "dogMateFlag";
     private static final String dogSize = "dogSize";
     private Button abandonedButoon;
-    private Location currentLocation;
-    private GoogleApiClient googleApiClient;
     private Double latLng, lngLat;
 
     @Override
@@ -75,6 +74,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         dogsRef = FirebaseDatabase.getInstance().getReference().child("dog");
         petShopRef = FirebaseDatabase.getInstance().getReference().child("petShops");
         abadonedDogRef = FirebaseDatabase.getInstance().getReference().child("abandonedDog");
+        vetRef = FirebaseDatabase.getInstance().getReference().child("vets");
 
 
         abandonedButoon.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +127,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         loadCanisite();
         loadPetShops();
         loadAbandonedDog();
+        loadVets();
 
 
     }
@@ -149,6 +150,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         loadCanisite();
         loadPetShops();
         loadAbandonedDog();
+        loadVets();
     }
 
     private void allFiltersMap(final String user) {
@@ -242,6 +244,29 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    private void loadVets() {
+        vetRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Vet vet = data.getValue(Vet.class);
+
+                    LatLng vetLocation = new LatLng(vet.getLat(), vet.getLng());
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(vetLocation)
+                            .title(vet.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.vet)));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void loadAbandonedDog() {
         abadonedDogRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -315,6 +340,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         if (getIntent().hasExtra("breed")) {
             filterUserList = getIntent().getStringArrayListExtra("userList");
+            latLng = getIntent().getDoubleExtra("latLng",0);
+            lngLat = getIntent().getDoubleExtra("lngLat",0);
             if (getIntent().getStringExtra("breed") != null && !getIntent().getStringExtra("breed").trim().equals("")) {
                 breed = getIntent().getStringExtra("breed");
             }
@@ -350,6 +377,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             case R.id.action_search:
                 Intent online = new Intent(MapTracking.this, FiltersActivity.class);
                 online.putStringArrayListExtra("userList", userList);
+                online.putExtra("latLng",latLng);
+                online.putExtra("lngLat",lngLat);
                 startActivity(online);
                 break;
 

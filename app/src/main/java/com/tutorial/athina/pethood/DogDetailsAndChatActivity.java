@@ -25,7 +25,7 @@ import java.util.List;
 
 public class DogDetailsAndChatActivity extends AppCompatActivity implements View.OnClickListener {
     private String dogOwner, myUser;
-    private Button chatButton, backButton;
+    private Button chatButton, backButton, seeOwnerButton;
     private ImageView logoView;
 
 
@@ -40,12 +40,14 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
 
         chatButton = (Button) findViewById(R.id.chatButton);
         backButton = (Button) findViewById(R.id.backFromChat);
+        seeOwnerButton = (Button) findViewById(R.id.seeOwnerButton);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);
         logoView = (ImageView) findViewById(R.id.imageViewLogo);
         dogList = new ArrayList<>();
 
 
         chatButton.setOnClickListener(this);
+        seeOwnerButton.setOnClickListener(this);
 
 
     }
@@ -102,6 +104,12 @@ public class DogDetailsAndChatActivity extends AppCompatActivity implements View
 
             case R.id.backFromChat:
                 startActivity(new Intent(this, ListOnline.class));
+                break;
+
+            case R.id.seeOwnerButton:
+                Intent owner = new Intent(this,UserProfileActivityOther.class);
+                owner.putExtra("dogOwner", dogOwner);
+                startActivity(owner);
                 break;
         }
 

@@ -66,5 +66,9 @@
     <string name="edit_color">Edit Color</string>
     <string name="edit_size">Edit Size</string>
     <string name="edit_mate">Edit Mating</string>
+    <string name="my_profile">My Profile</string>
+    <string name="see_owner">See Owner</string>
+    <string name="edit_surname">Edit Surname</string>
+    <string name="edit_phone">Edit Phone</string>
 
 </resources>
