@@ -1,7 +1,9 @@
 package com.tutorial.athina.pethood;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tutorial.athina.pethood.Models.Tracking;
 import com.tutorial.athina.pethood.Models.User;
+import com.tutorial.athina.pethood.Notifications.BootReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,13 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     RecyclerView.LayoutManager layoutManager;
 
     private List<String> userList;
+    BroadcastReceiver broadcastReceiver;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
 
     public static final int MY_PERMISSON_REQUEST_CODE = 7171;
     public static final int PLAY_SERVICES_RES_REQUEST = 7172;
@@ -81,6 +91,11 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
         toolbar.setTitle("Online");
         setSupportActionBar(toolbar);
+
+        broadcastReceiver = new BootReceiver();
+        IntentFilter intentFilter = new IntentFilter("com.tutorial.athina.pethood.action.REFRESH_INTERVAL");
+        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(broadcastReceiver, intentFilter);
 
         locations = FirebaseDatabase.getInstance().getReference("Locations");
         onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
@@ -191,7 +206,12 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         inflater.inflate(R.menu.menu_dogs, menu);
         return true;
     }
-
+    public void sendBroadcast() {
+        Intent intent = new Intent();
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setAction("com.tutorial.athina.pethood.action.REFRESH_INTERVAL");
+        sendBroadcast(intent);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -202,6 +222,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 startActivity(new Intent(this,ListOnline.class));
                 break;
             case R.id.itemServiceStart:
+                sendBroadcast();
                 startService(new Intent(this, NotificationService.class));
                 break;
             case R.id.action_map:

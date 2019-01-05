@@ -78,6 +78,7 @@ public class NotificationService extends IntentService {
                         Notification.Builder builder = helper.getPethoodChannelNotification("Missing dog Alert from " + missingDog.getSender(), missingDog.getMessage());
                         helper.getManager().notify(new Random().nextInt(), builder.build());
                         notify = true;
+
                     }
 
 
@@ -114,7 +115,7 @@ public class NotificationService extends IntentService {
             }
         });
 
-        sendBroadcast();
+        //sendBroadcast();
 
     }
 
