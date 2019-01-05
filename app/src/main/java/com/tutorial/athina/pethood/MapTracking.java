@@ -1,9 +1,10 @@
 package com.tutorial.athina.pethood;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,15 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,8 +36,9 @@ import com.tutorial.athina.pethood.Models.Tracking;
 import com.tutorial.athina.pethood.Models.Vet;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MapTracking extends AppCompatActivity implements OnMapReadyCallback {
+public class MapTracking extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef, abadonedDogRef, vetRef;
@@ -48,6 +50,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     private static final String dogSize = "dogSize";
     private Button abandonedButoon;
     private Double latLng, lngLat;
+    private List<Marker> abandonedMarker;
+    private List<String> abandonedUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +61,16 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMap);
         toolbar.setTitle("Doggy Map");
         this.setSupportActionBar(toolbar);
 
+        abandonedMarker = new ArrayList<>();
         abandonedButoon = (Button) findViewById(R.id.abadonedDogBtn);
 
         userList = new ArrayList<>();
         filterUserList = new ArrayList<>();
+        abandonedUID = new ArrayList<>();
 
         locations = FirebaseDatabase.getInstance().getReference().child("Locations");
         counterRef = FirebaseDatabase.getInstance().getReference().child("lastOnline");
@@ -267,6 +272,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void loadAbandonedDog() {
+
         abadonedDogRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -275,10 +281,13 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
                     LatLng abandonedDogPosition = new LatLng(abandonedDog.getLat(), abandonedDog.getLng());
 
-                    mMap.addMarker(new MarkerOptions()
+
+                    abandonedMarker.add(mMap.addMarker(new MarkerOptions()
                             .position(abandonedDogPosition)
                             .title("Abandoned Dog")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.exclamation)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.exclamation))));
+                    abandonedUID.add(data.getKey());
+
                 }
             }
 
@@ -337,10 +346,12 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
+
         if (getIntent().hasExtra("breed")) {
             filterUserList = getIntent().getStringArrayListExtra("userList");
-            latLng = getIntent().getDoubleExtra("latLng",0);
-            lngLat = getIntent().getDoubleExtra("lngLat",0);
+            latLng = getIntent().getDoubleExtra("latLng", 0);
+            lngLat = getIntent().getDoubleExtra("lngLat", 0);
             if (getIntent().getStringExtra("breed") != null && !getIntent().getStringExtra("breed").trim().equals("")) {
                 breed = getIntent().getStringExtra("breed");
             }
@@ -353,8 +364,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             loadPersonalizeMap();
         } else if (getIntent().hasExtra("userList") && getIntent().hasExtra("latLng") && getIntent().hasExtra("lngLat")) {
             userList = getIntent().getStringArrayListExtra("userList");
-            latLng = getIntent().getDoubleExtra("latLng",0);
-            lngLat = getIntent().getDoubleExtra("lngLat",0);
+            latLng = getIntent().getDoubleExtra("latLng", 0);
+            lngLat = getIntent().getDoubleExtra("lngLat", 0);
             loadLocationsForUsers();
         }
 
@@ -376,8 +387,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             case R.id.action_search:
                 Intent online = new Intent(MapTracking.this, FiltersActivity.class);
                 online.putStringArrayListExtra("userList", userList);
-                online.putExtra("latLng",latLng);
-                online.putExtra("lngLat",lngLat);
+                online.putExtra("latLng", latLng);
+                online.putExtra("lngLat", lngLat);
                 startActivity(online);
                 break;
 
@@ -389,4 +400,49 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        for (final Marker marker1 : abandonedMarker) {
+            if (marker.equals(marker1)) {
+
+
+                AlertDialog alertDialog = new AlertDialog.Builder(MapTracking.this).create();
+                alertDialog.setTitle("Abandoned dog");
+                alertDialog.setMessage("Delete abandoned dog marker");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Submit",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                abadonedDogRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            AbandonedDog abandonedDog = dataSnapshot1.getValue(AbandonedDog.class);
+                                            if (abandonedDog.getLat().equals(marker1.getPosition().latitude) &&
+                                                    abandonedDog.getLng().equals(marker1.getPosition().longitude)) {
+                                                dataSnapshot1.getRef().removeValue();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+
+                                });
+                                mMap.clear();
+                                loadPersonalizeMap();
+                                dialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Submited for deleting", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                alertDialog.show();
+            }
+
+        }
+
+        return true;
+    }
 }
