@@ -29,19 +29,19 @@ import java.util.Random;
 public class NotificationService extends IntentService {
 
     public static final String TAG = "NotifService";
+    private static String lastPost1 = "";
+    private static String lastPost2 = "";
+    private static int id;
     DatabaseReference chatsRef, reportRef;
     String myUser;
     BroadcastReceiver broadcastReceiver;
     NotificationHelper helper;
-    private static String lastPost1 = "";
-    private static String lastPost2 = "";
     Query lastReportQuery, lastMessageQuery;
     ValueEventListener lastReportQueryListener, lastMessageQueryListener;
     boolean notify;
     DbHelper dbHelper;
     SQLiteDatabase db;
     ContentValues values;
-    private static int id = 0;
 
     public NotificationService() {
         super(TAG);
@@ -86,12 +86,15 @@ public class NotificationService extends IntentService {
                         Notification.Builder builder = helper.getPethoodChannelNotification("Missing dog Alert from " + missingDog.getSender(), missingDog.getMessage());
                         helper.getManager().notify(new Random().nextInt(), builder.build());
                         values.clear();
+                        Random rand = new Random();
+                        id = rand.nextInt(125000) + 1;
                         values.put(StatusContract.Column.ID, id);
-                        values.put(StatusContract.Column.USER, missingDog.getSender());
+                        String newSender = missingDog.getSender().substring(0, missingDog.getSender().indexOf("@"));
+                        values.put(StatusContract.Column.USER, newSender);
                         values.put(StatusContract.Column.MESSAGE, missingDog.getMessage());
                         Uri uri = getContentResolver().insert(StatusContract.CONTENT_URI, values);
                         if (uri != null) {
-                            id++;
+                            ++id;
                             Log.d(TAG, String.format("%s: %s", missingDog.getSender(), missingDog.getMessage()));
                         }
                     }

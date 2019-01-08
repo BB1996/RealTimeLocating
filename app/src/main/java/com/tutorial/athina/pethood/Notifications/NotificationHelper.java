@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 
 import com.tutorial.athina.pethood.ListOnline;
+import com.tutorial.athina.pethood.MessageActivity;
 import com.tutorial.athina.pethood.MissingDogsActivity;
 import com.tutorial.athina.pethood.PetHoodWidget;
 import com.tutorial.athina.pethood.R;
@@ -45,9 +46,15 @@ public class NotificationHelper extends ContextWrapper {
     public Notification.Builder getPethoodChannelNotification(String title, String body) {
         PendingIntent operation = PendingIntent.getActivity(getApplicationContext(), -1,
                 new Intent(getApplicationContext(), ListOnline.class), PendingIntent.FLAG_ONE_SHOT);;
-        if (title.equals("Missing dog Alert from ")){
+        if (title.contains("Missing dog Alert from ")){
              operation = PendingIntent.getActivity(getApplicationContext(), -1,
                     new Intent(getApplicationContext(), MissingDogsActivity.class), PendingIntent.FLAG_ONE_SHOT);
+        }
+        else if(title.contains("New message from ")){
+            Intent notifChat = new Intent(getApplicationContext(), MessageActivity.class);
+            notifChat.putExtra("dogOwner",title.substring(title.lastIndexOf(" ") + 1));
+            operation = PendingIntent.getActivity(getApplicationContext(), -1,
+                    notifChat, PendingIntent.FLAG_ONE_SHOT);
         }
 
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)

@@ -3,6 +3,7 @@ package com.tutorial.athina.pethood;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ import com.tutorial.athina.pethood.Models.Canisite;
 import com.tutorial.athina.pethood.Models.Dog;
 import com.tutorial.athina.pethood.Models.PetShop;
 import com.tutorial.athina.pethood.Models.Tracking;
+import com.tutorial.athina.pethood.Models.User;
 import com.tutorial.athina.pethood.Models.Vet;
 
 import java.util.ArrayList;
@@ -42,8 +45,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef, abadonedDogRef, vetRef;
-    private ArrayList<String> userList;
-    private ArrayList<String> filterUserList;
     String breed, size, mating;
     private static final String dogBreed = "dogBreed";
     private static final String dogMateFlag = "dogMateFlag";
@@ -68,8 +69,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         abandonedMarker = new ArrayList<>();
         abandonedButoon = (Button) findViewById(R.id.abadonedDogBtn);
 
-        userList = new ArrayList<>();
-        filterUserList = new ArrayList<>();
+
         abandonedUID = new ArrayList<>();
 
         locations = FirebaseDatabase.getInstance().getReference().child("Locations");
@@ -99,34 +99,56 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
     private void loadLocationsForUsers() {
 
-        for (String user : userList) {
-            Query user_location = locations.orderByChild("email").equalTo(user);
-            user_location.addValueEventListener(new ValueEventListener() {
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+        counterRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    User user = dataSnapshot1.getValue(User.class);
+                    Query user_location = locations.orderByChild("email").equalTo(user.getEmail());
+                    user_location.addValueEventListener(new ValueEventListener() {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-                        Tracking tracking = postSnapshot.getValue(Tracking.class);
+                                Tracking tracking = postSnapshot.getValue(Tracking.class);
 
-                        LatLng userLocation = new LatLng(Double.parseDouble(tracking.getLat()),
-                                Double.parseDouble(tracking.getLng()));
+                                LatLng userLocation = new LatLng(Double.parseDouble(tracking.getLat()),
+                                        Double.parseDouble(tracking.getLng()));
+
+                                if(tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                                {
+                                    mMap.addMarker(new MarkerOptions()
+                                        .position(userLocation)
+                                        .title(tracking.getEmail())
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+
+                                }
+                                else{
+                                    mMap.addMarker(new MarkerOptions()
+                                            .position(userLocation)
+                                            .title(tracking.getEmail())
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)));
+                                }
+
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+                            }
 
 
-                        mMap.addMarker(new MarkerOptions()
-                                .position(userLocation)
-                                .title(tracking.getEmail())
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
-                    }
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
-        }
+            }
+        });
 
         loadCanisite();
         loadPetShops();
@@ -137,20 +159,33 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void loadPersonalizeMap() {
-        for (final String user : filterUserList) {
-            if (breed != null && size != null && mating != null) {
-                allFiltersMap(user);
+        counterRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    User user  = dataSnapshot1.getValue(User.class);
+                    if (breed != null && size != null && mating != null) {
+                        allFiltersMap(user.getEmail());
 
-            } else if (breed != null) {
-                loadPersonalizedFilterMap(user, dogBreed, breed);
-            } else if (size != null) {
-                loadPersonalizedFilterMap(user, dogSize, size);
-            } else if (mating != null) {
-                loadPersonalizedFilterMap(user, dogMateFlag, mating);
+                    } else if (breed != null) {
+                        loadPersonalizedFilterMap(user.getEmail(), dogBreed, breed);
+                    } else if (size != null) {
+                        loadPersonalizedFilterMap(user.getEmail(), dogSize, size);
+                    } else if (mating != null) {
+                        loadPersonalizedFilterMap(user.getEmail(), dogMateFlag, mating);
+                    }
+                }
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
+            }
+        });
+
+
+
+        alwaysLoadUser();
         loadCanisite();
         loadPetShops();
         loadAbandonedDog();
@@ -176,10 +211,20 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             Double.parseDouble(tracking.getLng()));
 
 
-                                    mMap.addMarker(new MarkerOptions()
-                                            .position(userLocation)
-                                            .title(tracking.getEmail())
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)));
+                                    if(tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                                    {
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(userLocation)
+                                                .title(tracking.getEmail())
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+
+                                    }
+                                    else{
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(userLocation)
+                                                .title(tracking.getEmail())
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)));
+                                    }
                                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
                                 }
 
@@ -239,6 +284,36 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                             .title(petShop.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.petshop)));
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void alwaysLoadUser() {
+
+        Query actualUser = locations.orderByChild("email").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        actualUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot data : dataSnapshot.getChildren())
+                {
+                    Tracking tracking = data.getValue(Tracking.class);
+
+                    LatLng myLocation = new LatLng(Double.parseDouble(tracking.getLat()),Double.parseDouble(tracking.getLng()));
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(myLocation)
+                            .title(tracking.getEmail())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 12.0f));
+
+                }
+
             }
 
             @Override
@@ -317,10 +392,20 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             Double.parseDouble(tracking.getLng()));
 
 
-                                    mMap.addMarker(new MarkerOptions()
-                                            .position(userLocation)
-                                            .title(tracking.getEmail())
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)));
+                                    if(tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                                    {
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(userLocation)
+                                                .title(tracking.getEmail())
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+
+                                    }
+                                    else{
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(userLocation)
+                                                .title(tracking.getEmail())
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)));
+                                    }
                                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
                                 }
 
@@ -349,7 +434,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this);
 
         if (getIntent().hasExtra("breed")) {
-            filterUserList = getIntent().getStringArrayListExtra("userList");
+
             latLng = getIntent().getDoubleExtra("latLng", 0);
             lngLat = getIntent().getDoubleExtra("lngLat", 0);
             if (getIntent().getStringExtra("breed") != null && !getIntent().getStringExtra("breed").trim().equals("")) {
@@ -362,8 +447,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                 mating = getIntent().getStringExtra("mating");
             }
             loadPersonalizeMap();
-        } else if (getIntent().hasExtra("userList") && getIntent().hasExtra("latLng") && getIntent().hasExtra("lngLat")) {
-            userList = getIntent().getStringArrayListExtra("userList");
+        } else {
+
             latLng = getIntent().getDoubleExtra("latLng", 0);
             lngLat = getIntent().getDoubleExtra("lngLat", 0);
             loadLocationsForUsers();
@@ -386,7 +471,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         switch (item.getItemId()) {
             case R.id.action_search:
                 Intent online = new Intent(MapTracking.this, FiltersActivity.class);
-                online.putStringArrayListExtra("userList", userList);
                 online.putExtra("latLng", latLng);
                 online.putExtra("lngLat", lngLat);
                 startActivity(online);
@@ -442,6 +526,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             }
 
         }
+        marker.showInfoWindow();
 
         return true;
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="interval_names">
+        <item>Always</item>
         <item>Five minutes</item>
         <item>Half an hour</item>
         <item>An hour</item>
@@ -10,7 +11,7 @@
     </string-array>
 
     <string-array name="interval_values">
-
+        <item>10000</item>
         <item>300000</item>
         <item>1800000</item>
         <item>3600000</item>

@@ -1,43 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_item_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:drawable/dialog_holo_dark_frame"
-    android:descendantFocusability="blocksDescendants">
 
-    <TextView
-        android:id="@+id/list_item_text_user"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item_content"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:background="@drawable/c"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:weightSum="2">
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/alert"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColorLink="@android:color/darker_gray" />
-    <TextView
-        android:id="@+id/list_item_text_created_at"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/list_item_text_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bellwidget" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/list_item_text_user"
-        android:layout_alignBottom="@+id/list_item_text_user"
-        android:layout_alignParentEnd="true"
-        android:text="@string/alert"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignParentRight="true"
-        android:textColorLink="@android:color/holo_red_dark"/>
-    <TextView
-        android:id="@+id/list_item_text_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/list_item_text_created_at"
-        android:autoLink="web"
-        android:focusable="false"
-        android:linksClickable="true"
-        android:text="@string/user_s_message"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignParentLeft="true"
-        android:textColorLink="@android:color/darker_gray"/>
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/widgetdog" />
+
+        <ImageView
+            android:id="@+id/list_item_text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>
+

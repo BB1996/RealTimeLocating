@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +33,7 @@ public class MessageActivity extends AppCompatActivity {
     MessageAdapter messageAdapter;
     List<Chat> mChat;
     RecyclerView recyclerView;
-    FirebaseUser firebaseUser;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +45,7 @@ public class MessageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        myUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         buttonSend = (ImageButton) findViewById(R.id.img_buttonSend);
         sendText = (EditText) findViewById(R.id.textSendChat);
 
@@ -59,7 +58,7 @@ public class MessageActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             dogOwner = getIntent().getStringExtra("dogOwner");
-            myUser = getIntent().getStringExtra("myUser");
+
         }
 
         readMessages(myUser, dogOwner);
