@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RealTimeLocating</string>
+    <string name="app_name">PetHood</string>
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
     <string name="next">Next</string>
@@ -72,5 +72,8 @@
     <string name="edit_phone">Edit Phone</string>
     <string name="please_click_informations_to_update">Please click informations to update!</string>
     <string name="edit_mating_y_n">Edit Mating (Y/N)</string>
+    <string name="us_mail">User\'s mail</string>
+    <string name="user_s_message">User\'s message</string>
+    <string name="alert">ALERT</string>
 
 </resources>

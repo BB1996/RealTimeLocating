@@ -3,10 +3,15 @@ package com.tutorial.athina.pethood.Notifications;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Color;
 
+import com.tutorial.athina.pethood.ListOnline;
+import com.tutorial.athina.pethood.MissingDogsActivity;
+import com.tutorial.athina.pethood.PetHoodWidget;
 import com.tutorial.athina.pethood.R;
 
 public class NotificationHelper extends ContextWrapper {
@@ -38,10 +43,18 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     public Notification.Builder getPethoodChannelNotification(String title, String body) {
+        PendingIntent operation = PendingIntent.getActivity(getApplicationContext(), -1,
+                new Intent(getApplicationContext(), ListOnline.class), PendingIntent.FLAG_ONE_SHOT);;
+        if (title.equals("Missing dog Alert from ")){
+             operation = PendingIntent.getActivity(getApplicationContext(), -1,
+                    new Intent(getApplicationContext(), MissingDogsActivity.class), PendingIntent.FLAG_ONE_SHOT);
+        }
+
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentText(body)
                 .setContentTitle(title)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentIntent(operation)
                 .setAutoCancel(true);
     }
 

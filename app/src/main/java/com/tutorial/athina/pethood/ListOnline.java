@@ -58,11 +58,6 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     private List<String> userList;
     BroadcastReceiver broadcastReceiver;
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
-    }
 
     public static final int MY_PERMISSON_REQUEST_CODE = 7171;
     public static final int PLAY_SERVICES_RES_REQUEST = 7172;
@@ -206,12 +201,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         inflater.inflate(R.menu.menu_dogs, menu);
         return true;
     }
-    public void sendBroadcast() {
-        Intent intent = new Intent();
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setAction("com.tutorial.athina.pethood.action.REFRESH_INTERVAL");
-        sendBroadcast(intent);
-    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -219,7 +209,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
             case R.id.action_join:
                 counterRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getEmail(), "Online"));
-                startActivity(new Intent(this,ListOnline.class));
+                startActivity(new Intent(this, ListOnline.class));
                 break;
             case R.id.itemServiceStart:
                 sendBroadcast();
@@ -228,8 +218,8 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
             case R.id.action_map:
                 Intent map = new Intent(this, MapTracking.class);
                 map.putStringArrayListExtra("userList", (ArrayList<String>) userList);
-                map.putExtra("latLng",mLastLocation.getLatitude());
-                map.putExtra("lngLat",mLastLocation.getLongitude());
+                map.putExtra("latLng", mLastLocation.getLatitude());
+                map.putExtra("lngLat", mLastLocation.getLongitude());
                 startActivity(map);
                 break;
             case R.id.userDetails:
@@ -243,7 +233,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 startActivity(myDogDetails);
                 break;
             case R.id.reportMissingDog:
-                startActivity(new Intent(ListOnline.this,MissingDogsActivity.class));
+                startActivity(new Intent(ListOnline.this, MissingDogsActivity.class));
                 break;
             case R.id.editInterval:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -254,6 +244,13 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void sendBroadcast() {
+        Intent intent = new Intent();
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setAction("com.tutorial.athina.pethood.action.REFRESH_INTERVAL");
+        sendBroadcast(intent);
     }
 
     private void displayLocation() {
@@ -367,6 +364,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     protected void onResume() {
         super.onResume();
         checkPlayServices();
+        updateList();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
@@ -398,4 +396,11 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 break;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
+
 }

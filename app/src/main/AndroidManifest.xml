@@ -57,7 +57,8 @@
 
         <receiver android:name="com.tutorial.athina.pethood.Notifications.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.tutorial.athina.pethood.action.REFRESH_INTERVAL" />
@@ -65,6 +66,27 @@
             </intent-filter>
 
         </receiver>
+        <receiver
+            android:name="com.tutorial.athina.pethood.PetHoodWidget"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name=
+                    "com.tutorial.athina.pethood.action.REFRESH_INTERVAL" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name=
+                    "android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pethood_widget" />
+        </receiver>
+
+        <provider
+            android:name="com.tutorial.athina.pethood.StatusProvider"
+            android:authorities="com.tutorial.athina.pethood.StatusProvider"
+            android:exported="true" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

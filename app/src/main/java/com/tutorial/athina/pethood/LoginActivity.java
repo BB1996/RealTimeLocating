@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -33,10 +34,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        if (firebaseAuth.getCurrentUser() != null) {
-//            finish();
-//            startActivity(new Intent(getApplicationContext(), ListOnline.class));
-//        }
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth auth) {
+                FirebaseUser firebaseUser = auth.getCurrentUser();
+                if (firebaseUser != null) {
+                   finish();
+                }
+            }
+        };
 
         progressDialog = new ProgressDialog(this);
 

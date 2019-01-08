@@ -433,7 +433,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
                                 });
                                 mMap.clear();
-                                loadPersonalizeMap();
+                                loadLocationsForUsers();
                                 dialog.dismiss();
                                 Toast.makeText(getApplicationContext(), "Submited for deleting", Toast.LENGTH_SHORT).show();
                             }

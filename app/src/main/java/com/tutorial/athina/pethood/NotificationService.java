@@ -3,8 +3,11 @@ package com.tutorial.athina.pethood;
 import android.app.IntentService;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -30,11 +33,15 @@ public class NotificationService extends IntentService {
     String myUser;
     BroadcastReceiver broadcastReceiver;
     NotificationHelper helper;
-    private static String lastPost1;
-    String lastPost2;
+    private static String lastPost1 = "";
+    private static String lastPost2 = "";
     Query lastReportQuery, lastMessageQuery;
     ValueEventListener lastReportQueryListener, lastMessageQueryListener;
-    boolean notify ;
+    boolean notify;
+    DbHelper dbHelper;
+    SQLiteDatabase db;
+    ContentValues values;
+    private static int id = 0;
 
     public NotificationService() {
         super(TAG);
@@ -44,11 +51,12 @@ public class NotificationService extends IntentService {
     public void onCreate() {
         super.onCreate();
 
-        lastPost1 = "";
-        lastPost2 = "";
         notify = false;
         helper = new NotificationHelper(this);
         broadcastReceiver = new BootReceiver();
+        dbHelper = new DbHelper(this);
+        db = dbHelper.getWritableDatabase();
+        values = new ContentValues();
 
         chatsRef = FirebaseDatabase.getInstance().getReference();
         reportRef = FirebaseDatabase.getInstance().getReference();
@@ -77,8 +85,15 @@ public class NotificationService extends IntentService {
                         lastPost1 = missingDog.getMessage();
                         Notification.Builder builder = helper.getPethoodChannelNotification("Missing dog Alert from " + missingDog.getSender(), missingDog.getMessage());
                         helper.getManager().notify(new Random().nextInt(), builder.build());
-                        notify = true;
-
+                        values.clear();
+                        values.put(StatusContract.Column.ID, id);
+                        values.put(StatusContract.Column.USER, missingDog.getSender());
+                        values.put(StatusContract.Column.MESSAGE, missingDog.getMessage());
+                        Uri uri = getContentResolver().insert(StatusContract.CONTENT_URI, values);
+                        if (uri != null) {
+                            id++;
+                            Log.d(TAG, String.format("%s: %s", missingDog.getSender(), missingDog.getMessage()));
+                        }
                     }
 
 
