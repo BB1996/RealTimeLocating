@@ -1,9 +1,14 @@
 package com.tutorial.athina.pethood;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +28,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +44,8 @@ import com.tutorial.athina.pethood.Models.PetShop;
 import com.tutorial.athina.pethood.Models.Tracking;
 import com.tutorial.athina.pethood.Models.User;
 import com.tutorial.athina.pethood.Models.Vet;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +111,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         counterRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     User user = dataSnapshot1.getValue(User.class);
                     Query user_location = locations.orderByChild("email").equalTo(user.getEmail());
                     user_location.addValueEventListener(new ValueEventListener() {
@@ -114,15 +123,13 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                 LatLng userLocation = new LatLng(Double.parseDouble(tracking.getLat()),
                                         Double.parseDouble(tracking.getLng()));
 
-                                if(tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-                                {
+                                if (tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                                     mMap.addMarker(new MarkerOptions()
-                                        .position(userLocation)
-                                        .title(tracking.getEmail())
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            .position(userLocation)
+                                            .title(tracking.getEmail())
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
 
-                                }
-                                else{
+                                } else {
                                     mMap.addMarker(new MarkerOptions()
                                             .position(userLocation)
                                             .title(tracking.getEmail())
@@ -162,8 +169,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         counterRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    User user  = dataSnapshot1.getValue(User.class);
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    User user = dataSnapshot1.getValue(User.class);
                     if (breed != null && size != null && mating != null) {
                         allFiltersMap(user.getEmail());
 
@@ -182,7 +189,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
             }
         });
-
 
 
         alwaysLoadUser();
@@ -211,15 +217,13 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             Double.parseDouble(tracking.getLng()));
 
 
-                                    if(tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-                                    {
+                                    if (tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                                         mMap.addMarker(new MarkerOptions()
                                                 .position(userLocation)
                                                 .title(tracking.getEmail())
                                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
 
-                                    }
-                                    else{
+                                    } else {
                                         mMap.addMarker(new MarkerOptions()
                                                 .position(userLocation)
                                                 .title(tracking.getEmail())
@@ -300,11 +304,10 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot data : dataSnapshot.getChildren())
-                {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Tracking tracking = data.getValue(Tracking.class);
 
-                    LatLng myLocation = new LatLng(Double.parseDouble(tracking.getLat()),Double.parseDouble(tracking.getLng()));
+                    LatLng myLocation = new LatLng(Double.parseDouble(tracking.getLat()), Double.parseDouble(tracking.getLng()));
 
                     mMap.addMarker(new MarkerOptions()
                             .position(myLocation)
@@ -392,15 +395,13 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             Double.parseDouble(tracking.getLng()));
 
 
-                                    if(tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-                                    {
+                                    if (tracking.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                                         mMap.addMarker(new MarkerOptions()
                                                 .position(userLocation)
                                                 .title(tracking.getEmail())
                                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
 
-                                    }
-                                    else{
+                                    } else {
                                         mMap.addMarker(new MarkerOptions()
                                                 .position(userLocation)
                                                 .title(tracking.getEmail())
@@ -432,6 +433,8 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+
 
         if (getIntent().hasExtra("breed")) {
 
@@ -486,7 +489,35 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public boolean onMarkerClick(final Marker marker) {
+
+        LatLng myPosition = new LatLng(latLng, lngLat);
+        Location myLocation = new Location("");
+        myLocation.setLatitude(latLng);
+        myLocation.setLongitude(lngLat);
+
+
+
+        LatLng markerPosition = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+
+
+        marker.showInfoWindow();
+
+        AlertDialog directionsDialog = new AlertDialog.Builder(MapTracking.this).create();
+        directionsDialog.setTitle("Get directions");
+        directionsDialog.setMessage("Get directions to this place");
+        directionsDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Go", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+marker.getPosition().latitude+","+marker.getPosition().longitude);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });
+        directionsDialog.show();
 
         for (final Marker marker1 : abandonedMarker) {
             if (marker.equals(marker1)) {
@@ -523,11 +554,15 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                             }
                         });
                 alertDialog.show();
+
+
+
             }
 
         }
-        marker.showInfoWindow();
 
         return true;
     }
+
+
 }
