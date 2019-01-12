@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -41,9 +42,8 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        android.support.v7.widget.Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMessage);
-        toolbar.setTitle("Chat");
-        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Chat</font>"));
 
 
         myUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();

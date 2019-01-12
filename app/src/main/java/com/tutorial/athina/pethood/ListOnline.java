@@ -1,7 +1,6 @@
 package com.tutorial.athina.pethood;
 
 import android.Manifest;
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,20 +10,25 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -34,13 +38,13 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.Models.Dog;
 import com.tutorial.athina.pethood.Models.Owner;
 import com.tutorial.athina.pethood.Models.Tracking;
 import com.tutorial.athina.pethood.Models.User;
@@ -48,57 +52,68 @@ import com.tutorial.athina.pethood.Notifications.BootReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ListOnline extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
-    FirebaseUser firebaseUser;
-    DatabaseReference onlineRef, currentUserRef, counterRef, locations, offlineRef, ownersRef, chatsRef;
+    DatabaseReference onlineRef, currentUserRef, counterRef, locations, offlineRef, ownersRef, chatsRef, dogsRef;
     FirebaseRecyclerAdapter<User, ListOnlineViewHolder> adapter;
-
-    RecyclerView listOnline, listOffline;
-    RecyclerView.LayoutManager layoutManager, layoutManagerOffline;
-
+    RecyclerView listOnline;
+    NavigationView mNavigationView;
+    RecyclerView.LayoutManager layoutManager;
     private List<String> userList, offlineList;
     BroadcastReceiver broadcastReceiver;
-
-
     public static final int MY_PERMISSON_REQUEST_CODE = 7171;
     public static final int PLAY_SERVICES_RES_REQUEST = 7172;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
-
     private Location mLastLocation = new Location("dummy");
-
-
     private static int UPDATE_INTERVAL = 5000;
     private static int FASTEST_INTERVAL = 3000;
     private static int DISTANCE = 10;
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mToggle;
+    private TextView drawerUserText, drawerUserDog;
+    private ImageView drawerImageUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_online);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Online</font>"));
+
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer);
+        mToggle = new ActionBarDrawerToggle(this, mDrawer, R.string.open_drawer, R.string.close_drawer);
+        mDrawer.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        mNavigationView = (NavigationView) findViewById(R.id.navigation);
+        mNavigationView.bringToFront();
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        View headerLayout = mNavigationView.getHeaderView(0);
+
+        drawerImageUser = (ImageView) headerLayout.findViewById(R.id.drawerImageUser);
+        drawerUserText = (TextView) headerLayout.findViewById(R.id.drawerUserName);
+        drawerUserDog = (TextView) headerLayout.findViewById(R.id.drawerUserDog);
+
         listOnline = (RecyclerView) findViewById(R.id.listOnline);
         listOnline.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         listOnline.setLayoutManager(layoutManager);
 
+
         userList = new ArrayList<String>();
         offlineList = new ArrayList<String>();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
-        toolbar.setTitle("Online");
-        setSupportActionBar(toolbar);
 
         broadcastReceiver = new BootReceiver();
         IntentFilter intentFilter = new IntentFilter("com.tutorial.athina.pethood.action.REFRESH_INTERVAL");
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(broadcastReceiver, intentFilter);
 
-        startService(new Intent(this,NotificationService.class));
+        startService(new Intent(this, NotificationService.class));
 
 
         locations = FirebaseDatabase.getInstance().getReference("Locations");
@@ -109,6 +124,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         offlineRef = FirebaseDatabase.getInstance().getReference("offlineUsers");
         chatsRef = FirebaseDatabase.getInstance().getReference().child("chats");
+        dogsRef = FirebaseDatabase.getInstance().getReference().child("dog");
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -160,12 +176,32 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
             }
         });
-        ownersRef.addValueEventListener(new ValueEventListener() {
+        ownersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Owner owner = dataSnapshot1.getValue(Owner.class);
-                    offlineList.add(owner.getEmail());
+                    if (owner.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        drawerUserText.setText(owner.getName() + " " + owner.getSurname());
+                        Glide.with(getApplicationContext()).load(owner.getProfileImageUrl()).into(drawerImageUser);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dogsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Dog dog = data.getValue(Dog.class);
+                    if (dog.getDogOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        drawerUserDog.setText("Owner of " + dog.getDogName());
+                    }
                 }
             }
 
@@ -175,24 +211,6 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
             }
         });
 
-        for (final String user : offlineList) {
-            counterRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        User user1 = dataSnapshot1.getValue(User.class);
-                        if (user1.getEmail().equals(user)) {
-                            offlineList.remove(user);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
 
     }
 
@@ -244,48 +262,10 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_dogs, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-
-            case R.id.itemServiceStart:
-                sendBroadcast();
-                startService(new Intent(this, NotificationService.class));
-                break;
-            case R.id.action_map:
-                Intent map = new Intent(this, MapTracking.class);
-                map.putStringArrayListExtra("userList", (ArrayList<String>) userList);
-                map.putExtra("latLng", mLastLocation.getLatitude());
-                map.putExtra("lngLat", mLastLocation.getLongitude());
-                startActivity(map);
-                break;
-            case R.id.userDetails:
-                Intent myUserProfile = new Intent(ListOnline.this, UserProfileActivity.class);
-                myUserProfile.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                startActivity(myUserProfile);
-                break;
-            case R.id.dogDetails:
-                Intent myDogDetails = new Intent(ListOnline.this, DogDetailsActivity.class);
-                myDogDetails.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                startActivity(myDogDetails);
-                break;
-            case R.id.reportMissingDog:
-                startActivity(new Intent(ListOnline.this, MissingDogsActivity.class));
-                break;
-            case R.id.editInterval:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.action_logout:
-                currentUserRef.removeValue();
-                startActivity(new Intent(this, LoginActivity.class));
-                break;
+        if (mToggle.onOptionsItemSelected(item)) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -397,7 +377,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
     @Override
     protected void onStop() {
-        notifyChat();
+
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
@@ -434,7 +414,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                startService(new Intent(getApplicationContext(),NotificationService.class));
+                startService(new Intent(getApplicationContext(), NotificationService.class));
             }
 
             @Override
@@ -473,4 +453,48 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         unregisterReceiver(broadcastReceiver);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
+        drawer.closeDrawer(GravityCompat.START);
+
+        int id = item.getItemId();
+        switch (id) {
+
+            case R.id.itemServiceStart:
+                Toast.makeText(this, "REFRESH", Toast.LENGTH_SHORT).show();
+                sendBroadcast();
+                startService(new Intent(ListOnline.this, NotificationService.class));
+                break;
+            case R.id.action_map:
+                Intent map = new Intent(ListOnline.this, MapTracking.class);
+                map.putStringArrayListExtra("userList", (ArrayList<String>) userList);
+                map.putExtra("latLng", mLastLocation.getLatitude());
+                map.putExtra("lngLat", mLastLocation.getLongitude());
+                startActivity(map);
+                break;
+            case R.id.userDetails:
+                Intent myUserProfile = new Intent(ListOnline.this, UserProfileActivity.class);
+                myUserProfile.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                startActivity(myUserProfile);
+                break;
+            case R.id.dogDetails:
+                Intent myDogDetails = new Intent(ListOnline.this, DogDetailsActivity.class);
+                myDogDetails.putExtra("dogOwner", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                startActivity(myDogDetails);
+                break;
+            case R.id.reportMissingDog:
+                startActivity(new Intent(ListOnline.this, MissingDogsActivity.class));
+                break;
+            case R.id.editInterval:
+                startActivity(new Intent(ListOnline.this, SettingsActivity.class));
+                break;
+            case R.id.action_logout:
+                currentUserRef.removeValue();
+                startActivity(new Intent(ListOnline.this, LoginActivity.class));
+                break;
+        }
+
+        return true;
+    }
 }

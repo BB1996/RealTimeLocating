@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dog_details_view);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>My Dog</font>"));
 
         backButton = (Button) findViewById(R.id.backToOnline);
         listViewDogs = (ListView) findViewById(R.id.listViewDogs);

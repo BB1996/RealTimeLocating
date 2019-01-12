@@ -37,6 +37,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +46,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.DirectionsHelper.FetchURL;
+import com.tutorial.athina.pethood.DirectionsHelper.TaskLoadedCallback;
 import com.tutorial.athina.pethood.Models.AbandonedDog;
 import com.tutorial.athina.pethood.Models.Canisite;
 import com.tutorial.athina.pethood.Models.Dog;
@@ -57,7 +61,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapTracking extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, TaskLoadedCallback {
 
     private GoogleMap mMap;
     DatabaseReference locations, counterRef, canisiteRef, dogsRef, petShopRef, abadonedDogRef, vetRef;
@@ -76,6 +80,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     private Location mLastLocation = new Location("dummy");
     Marker userMarker;
     HashMap<String, Marker> otherMarkers;
+    Polyline currentPolyline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -692,7 +697,11 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
                     LatLng myLocation = new LatLng(Double.parseDouble(tracking.getLat()), Double.parseDouble(tracking.getLng()));
 
-                    mMap.addMarker(new MarkerOptions()
+                    if (userMarker != null) {
+                        userMarker.remove();
+                    }
+
+                    userMarker = mMap.addMarker(new MarkerOptions()
                             .position(myLocation)
                             .title(tracking.getEmail())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
@@ -830,7 +839,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 //        myLocation.setLongitude(lngLat);
 
 
-        LatLng markerPosition = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+        final LatLng myPosition = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
 
         marker.showInfoWindow();
@@ -869,18 +878,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                 Toast.makeText(getApplicationContext(), "Submited for deleting", Toast.LENGTH_SHORT).show();
                             }
                         });
-//                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Go", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude);
-//                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//                        mapIntent.setPackage("com.google.android.apps.maps");
-//                        if (mapIntent.resolveActivity(getPackageManager()) != null) {
-//                            startActivity(mapIntent);
-//                        }
-//                    }
-//                });
-
                 alertDialog.show();
                 alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
@@ -897,12 +894,15 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             directionsDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Go", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude);
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude+ "&mode=walking");
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     if (mapIntent.resolveActivity(getPackageManager()) != null) {
                         startActivity(mapIntent);
                     }
+//                    String url = getUrl(myPosition,marker.getPosition(),"driving");
+//                    new FetchURL(MapTracking.this).execute(url,"driving");
+
                 }
             });
             directionsDialog.show();
@@ -910,6 +910,16 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             directionsDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.WHITE);
         }
         return true;
+    }
+
+    private String getUrl(LatLng origin, LatLng destination, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_destination = "destination=" + destination.latitude + "," + destination.longitude;
+        String mode = "mode=" + directionMode;
+        String param = str_origin + "&" + str_destination + "&" + mode;
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param + "&key=" + "AIzaSyBKkCP8ypZC5AkgYfirRiU0qD6POrJNI64";
+        return url;
     }
 
     private void buildGoogleApiClient() {
@@ -1053,4 +1063,11 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
+    @Override
+    public void onTaskDone(Object... values) {
+        if(currentPolyline != null){
+            currentPolyline.remove();
+        }
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+    }
 }

@@ -75,5 +75,9 @@
     <string name="us_mail">User\'s mail</string>
     <string name="user_s_message">User\'s message</string>
     <string name="alert">ALERT</string>
+    <string name="apply_refresh">Apply</string>
+    <string name="refresh_button">refresh_button</string>
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
 
 </resources>

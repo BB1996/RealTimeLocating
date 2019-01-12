@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:weightSum="10"
+    android:baselineAligned="false" android:orientation="horizontal">
+
+    <Button
+        android:text="@string/apply_refresh"
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:layout_height="wrap_content"
+        android:id="@+id/refreshButton"
+        android:layout_gravity="center"
+        android:background="#9b6191"
+        android:textColor="#FFFF"
+       />
+
+</LinearLayout>

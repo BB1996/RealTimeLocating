@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,9 +38,8 @@ public class MissingDogsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.missing_dogs_layout);
 
-        android.support.v7.widget.Toolbar toolbar = (Toolbar) findViewById(R.id.toolBarMissingDog);
-        toolbar.setTitle("Missing Dogs Reports");
-        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Missing Dog Reports</font>"));
 
         buttonSend = (ImageButton) findViewById(R.id.img_buttonSendMissing);
         sendText = (EditText) findViewById(R.id.textSendMissingDog);
