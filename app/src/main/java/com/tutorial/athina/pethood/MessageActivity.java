@@ -1,5 +1,6 @@
 package com.tutorial.athina.pethood;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,6 +91,7 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("message", message);
 
         ref.child("chats").push().setValue(hashMap);
+
 
 
     }

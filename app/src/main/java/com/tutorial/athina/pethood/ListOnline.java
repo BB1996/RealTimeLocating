@@ -1,6 +1,7 @@
 package com.tutorial.athina.pethood;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -38,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tutorial.athina.pethood.Models.Owner;
 import com.tutorial.athina.pethood.Models.Tracking;
@@ -46,12 +48,13 @@ import com.tutorial.athina.pethood.Notifications.BootReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ListOnline extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     FirebaseUser firebaseUser;
-    DatabaseReference onlineRef, currentUserRef, counterRef, locations, offlineRef, ownersRef;
+    DatabaseReference onlineRef, currentUserRef, counterRef, locations, offlineRef, ownersRef, chatsRef;
     FirebaseRecyclerAdapter<User, ListOnlineViewHolder> adapter;
 
     RecyclerView listOnline, listOffline;
@@ -95,6 +98,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(broadcastReceiver, intentFilter);
 
+        startService(new Intent(this,NotificationService.class));
+
+
         locations = FirebaseDatabase.getInstance().getReference("Locations");
         onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
         counterRef = FirebaseDatabase.getInstance().getReference("lastOnline");
@@ -102,6 +108,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         currentUserRef = FirebaseDatabase.getInstance().getReference("lastOnline")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         offlineRef = FirebaseDatabase.getInstance().getReference("offlineUsers");
+        chatsRef = FirebaseDatabase.getInstance().getReference().child("chats");
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -382,12 +389,15 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     @Override
     protected void onStart() {
         super.onStart();
+        sendBroadcast();
+        startService(new Intent(this, NotificationService.class));
         if (mGoogleApiClient != null)
             mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
+        notifyChat();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
@@ -402,6 +412,8 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         super.onResume();
         checkPlayServices();
         updateList();
+        notifyChat();
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
@@ -417,6 +429,27 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
     }
 
+    private void notifyChat() {
+        Query query = chatsRef.child("receiver").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                startService(new Intent(getApplicationContext(),NotificationService.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        notifyChat();
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
