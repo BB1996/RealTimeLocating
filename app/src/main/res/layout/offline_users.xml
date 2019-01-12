@@ -23,8 +23,7 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id ="@+id/avatar"
-            android:src = "@drawable/ic_action_name"
+            android:src = "@drawable/ic_action_name_2"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="30dp" />

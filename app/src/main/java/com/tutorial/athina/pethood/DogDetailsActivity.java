@@ -121,16 +121,22 @@ public class DogDetailsActivity extends AppCompatActivity implements View.OnClic
 
         final TextView textView = (TextView) dialogView.findViewById(R.id.textViewEdit);
         final EditText editText = (EditText) dialogView.findViewById(R.id.newValue);
+        editText.setText(dogName);
         final TextView textView2 = (TextView) dialogView.findViewById(R.id.textViewEdit2);
         final EditText editText2 = (EditText) dialogView.findViewById(R.id.newValue2);
+        editText2.setText(dogBreed);
         final TextView textView3 = (TextView) dialogView.findViewById(R.id.textViewEdit3);
         final EditText editText3 = (EditText) dialogView.findViewById(R.id.newValue3);
+        editText3.setText(dogAge);
         final TextView textView4 = (TextView) dialogView.findViewById(R.id.textViewEdit4);
         final EditText editText4 = (EditText) dialogView.findViewById(R.id.newValue4);
+        editText4.setText(dogColor);
         final TextView textView5 = (TextView) dialogView.findViewById(R.id.textViewEdit5);
         final EditText editText5 = (EditText) dialogView.findViewById(R.id.newValue5);
+        editText5.setText(dogSize);
         final TextView textView6 = (TextView) dialogView.findViewById(R.id.textViewEdit6);
         final EditText editText6 = (EditText) dialogView.findViewById(R.id.newValue6);
+        editText6.setText(dogMating);
         final Button button = (Button) dialogView.findViewById(R.id.buttonUpdate);
 
         button.setOnClickListener(new View.OnClickListener() {

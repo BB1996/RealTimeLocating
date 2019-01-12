@@ -80,10 +80,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
         final TextView textView = (TextView) dialogView.findViewById(R.id.textViewEdit);
         final EditText editText = (EditText) dialogView.findViewById(R.id.newValue);
+        editText.setText(ownerName);
         final TextView textView2 = (TextView) dialogView.findViewById(R.id.textViewEdit2);
         final EditText editText2 = (EditText) dialogView.findViewById(R.id.newValue2);
+        editText2.setText(ownerSurname);
         final TextView textView3 = (TextView) dialogView.findViewById(R.id.textViewEdit3);
         final EditText editText3 = (EditText) dialogView.findViewById(R.id.newValue3);
+        editText3.setText(ownerPhone);
         final Button button = (Button) dialogView.findViewById(R.id.buttonUpdate);
 
         button.setOnClickListener(new View.OnClickListener() {

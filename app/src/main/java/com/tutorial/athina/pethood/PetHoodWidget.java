@@ -8,15 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.widget.RemoteViews;
-
-import com.tutorial.athina.pethood.Models.MissingDog;
 
 public class PetHoodWidget extends AppWidgetProvider {
 
@@ -27,7 +24,7 @@ public class PetHoodWidget extends AppWidgetProvider {
         paint.setTextSize(size);
         Typeface ourCustomTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Italic.ttf");
         paint.setTypeface(ourCustomTypeface);
-        paint.setColor(Color.argb(255,0,0,0));
+        paint.setColor(Color.argb(255, 255, 255, 255));
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setSubpixelText(true);
         paint.setAntiAlias(true);
@@ -67,8 +64,8 @@ public class PetHoodWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.widget);
 
-            view.setImageViewBitmap(R.id.list_item_text_user,buildUpdate(message,100,context));
-            view.setImageViewBitmap(R.id.list_item_text_message,buildUpdate("MISSING DOG OF " + user,70,context));
+            view.setImageViewBitmap(R.id.list_item_text_user, buildUpdate(message, 100, context));
+            view.setImageViewBitmap(R.id.list_item_text_message, buildUpdate("MISSING DOG OF " + user, 70, context));
 
             view.setOnClickPendingIntent(R.id.list_item_text_user, operation);
             view.setOnClickPendingIntent(R.id.list_item_text_message, operation);
@@ -85,8 +82,11 @@ public class PetHoodWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
         this.onUpdate(context, appWidgetManager, appWidgetManager
                 .getAppWidgetIds(new ComponentName(context, PetHoodWidget.class)));
+
+
     }
 
 

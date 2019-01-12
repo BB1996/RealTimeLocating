@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tutorial.athina.pethood.Models.Owner;
 import com.tutorial.athina.pethood.Models.Tracking;
 import com.tutorial.athina.pethood.Models.User;
 import com.tutorial.athina.pethood.Notifications.BootReceiver;
@@ -49,13 +51,13 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     FirebaseUser firebaseUser;
-    DatabaseReference onlineRef, currentUserRef, counterRef, locations;
+    DatabaseReference onlineRef, currentUserRef, counterRef, locations, offlineRef, ownersRef;
     FirebaseRecyclerAdapter<User, ListOnlineViewHolder> adapter;
 
-    RecyclerView listOnline;
-    RecyclerView.LayoutManager layoutManager;
+    RecyclerView listOnline, listOffline;
+    RecyclerView.LayoutManager layoutManager, layoutManagerOffline;
 
-    private List<String> userList;
+    private List<String> userList, offlineList;
     BroadcastReceiver broadcastReceiver;
 
 
@@ -82,6 +84,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         listOnline.setLayoutManager(layoutManager);
 
         userList = new ArrayList<String>();
+        offlineList = new ArrayList<String>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
         toolbar.setTitle("Online");
@@ -95,8 +98,10 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
         locations = FirebaseDatabase.getInstance().getReference("Locations");
         onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
         counterRef = FirebaseDatabase.getInstance().getReference("lastOnline");
+        ownersRef = FirebaseDatabase.getInstance().getReference("Owners");
         currentUserRef = FirebaseDatabase.getInstance().getReference("lastOnline")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        offlineRef = FirebaseDatabase.getInstance().getReference("offlineUsers");
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -148,8 +153,41 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
             }
         });
-    }
+        ownersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Owner owner = dataSnapshot1.getValue(Owner.class);
+                    offlineList.add(owner.getEmail());
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        for (final String user : offlineList) {
+            counterRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        User user1 = dataSnapshot1.getValue(User.class);
+                        if (user1.getEmail().equals(user)) {
+                            offlineList.remove(user);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
 
     private void updateList() {
 
@@ -164,6 +202,9 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
             protected void onBindViewHolder(ListOnlineViewHolder viewHolder, int position, final User model) {
                 userList.add(model.getEmail());
                 viewHolder.txtEmail.setText(model.getEmail());
+                if (model.getStatus().equals("Online")) {
+                    viewHolder.statusImage.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_name));
+                }
 
                 viewHolder.itemClickListener = new ItemClickListener() {
                     @Override
@@ -206,11 +247,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_join:
-                counterRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getEmail(), "Online"));
-                startActivity(new Intent(this, ListOnline.class));
-                break;
+
             case R.id.itemServiceStart:
                 sendBroadcast();
                 startService(new Intent(this, NotificationService.class));

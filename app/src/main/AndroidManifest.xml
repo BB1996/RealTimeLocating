@@ -9,9 +9,10 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -52,12 +53,14 @@
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".UserProfileActivityOther" />
 
-        <service android:name=".NotificationService"/>
+        <service android:name=".NotificationService" />
 
 
         <receiver android:name="com.tutorial.athina.pethood.Notifications.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -68,15 +71,12 @@
         </receiver>
         <receiver
             android:name="com.tutorial.athina.pethood.PetHoodWidget"
-            android:exported="false" >
+            android:exported="false">
+
             <intent-filter>
-                <action android:name=
-                    "com.tutorial.athina.pethood.action.REFRESH_INTERVAL" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <intent-filter>
-                <action android:name=
-                    "android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/pethood_widget" />
@@ -106,8 +106,8 @@
         <activity
             android:name="com.tutorial.athina.pethood.MapTracking"
             android:configChanges="orientation|screenSize"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" />
     </application>
 
 </manifest>

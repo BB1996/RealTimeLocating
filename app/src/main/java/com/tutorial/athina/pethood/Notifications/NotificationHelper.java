@@ -60,7 +60,7 @@ public class NotificationHelper extends ContextWrapper {
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentText(body)
                 .setContentTitle(title)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.ic_pet_notification)
                 .setContentIntent(operation)
                 .setAutoCancel(true);
     }

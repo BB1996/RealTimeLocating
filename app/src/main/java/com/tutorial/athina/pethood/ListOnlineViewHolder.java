@@ -2,16 +2,19 @@ package com.tutorial.athina.pethood;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListOnlineViewHolder extends RecyclerView.ViewHolder implements ItemClickListener,View.OnClickListener {
 
     public TextView txtEmail;
+    public ImageView statusImage;
     ItemClickListener itemClickListener;
 
     public ListOnlineViewHolder(View itemView) {
         super(itemView);
         txtEmail = (TextView) itemView.findViewById(R.id.txt_email);
+        statusImage = (ImageView) itemView.findViewById(R.id.avatar) ;
         itemView.setOnClickListener(this);
 
     }
