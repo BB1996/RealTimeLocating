@@ -79,5 +79,6 @@
     <string name="refresh_button">refresh_button</string>
     <string name="open_drawer">Open</string>
     <string name="close_drawer">Close</string>
+    <string name="recent_chatss">Recent Chats</string>
 
 </resources>

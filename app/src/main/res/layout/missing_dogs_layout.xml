@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e6e6e6">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolBarMissingDog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#9b6191"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_missingDog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomMissingDog"
-        android:layout_below="@+id/toolBarMissingDog" />
+        android:layout_above="@+id/bottomMissingDog" />
 
     <RelativeLayout
         android:id="@+id/bottomMissingDog"

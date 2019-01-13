@@ -52,6 +52,7 @@
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".UserProfileActivityOther" />
+        <activity android:name=".RecentChatsActivity" />
 
         <service android:name=".NotificationService" />
 
@@ -80,6 +81,7 @@
                 <action android:name="com.tutorial.athina.pethood.action.REFRESH_INTERVAL" />
 
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/pethood_widget" />

@@ -46,7 +46,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.tutorial.athina.pethood.DirectionsHelper.FetchURL;
 import com.tutorial.athina.pethood.DirectionsHelper.TaskLoadedCallback;
 import com.tutorial.athina.pethood.Models.AbandonedDog;
 import com.tutorial.athina.pethood.Models.Canisite;
@@ -166,6 +165,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             .position(userLocation)
                                             .title(tracking.getEmail())
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                 } else {
 
@@ -187,7 +187,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                 }
 
 
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
                                 loadCanisite();
                                 loadPetShops();
                                 loadAbandonedDog();
@@ -272,6 +271,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -283,6 +283,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                         .title(tracking.getEmail())
                                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.dogpawn)))));
 
+
                                             } else {
                                                 otherMarkers.put(tracking.getEmail(), (mMap.addMarker(new MarkerOptions()
                                                         .position(userLocation)
@@ -291,7 +292,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -326,6 +327,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -345,7 +347,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -380,6 +382,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -399,7 +402,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -434,6 +437,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -453,7 +457,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -488,6 +492,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -507,7 +512,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -542,6 +547,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -561,7 +567,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -597,6 +603,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                                     .position(userLocation)
                                                     .title(tracking.getEmail())
                                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.mydog)));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
 
                                         } else {
 
@@ -616,7 +623,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                                             }
 
                                         }
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+
                                     }
 
 
@@ -648,10 +655,12 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
                     LatLng canisitaLocation = new LatLng(canisite.getLat(), canisite.getLng());
 
-                    mMap.addMarker(new MarkerOptions()
+                    Marker canisitaMarker = mMap.addMarker(new MarkerOptions()
                             .position(canisitaLocation)
                             .title(canisite.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.canisita)));
+
+
                 }
             }
 
@@ -793,9 +802,6 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             }
             loadPersonalizeMap();
         } else {
-
-//            latLng = getIntent().getDoubleExtra("latLng", 0);
-//            lngLat = getIntent().getDoubleExtra("lngLat", 0);
             loadLocationsForUsers();
         }
 
@@ -894,7 +900,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
             directionsDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Go", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude+ "&mode=walking");
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude + "&mode=walking");
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     if (mapIntent.resolveActivity(getPackageManager()) != null) {
@@ -1065,7 +1071,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onTaskDone(Object... values) {
-        if(currentPolyline != null){
+        if (currentPolyline != null) {
             currentPolyline.remove();
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);

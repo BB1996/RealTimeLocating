@@ -6,6 +6,6 @@
         android:radius="1dp"
         android:topLeftRadius="0dp" />
 
-    <solid android:color="@android:color/holo_red_light" />
+    <solid android:color="@color/browser_actions_bg_grey" />
 
 </shape>
