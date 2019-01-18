@@ -23,12 +23,15 @@ import com.tutorial.athina.pethood.Models.Chat;
 import com.tutorial.athina.pethood.Models.Owner;
 import com.tutorial.athina.pethood.R;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.ViewHolder> {
     private Context mContext;
     private List<Chat> mChat;
-    private DatabaseReference ownerRef;
+    private DatabaseReference ownerRef, chatRef;
+    private HashMap<String, String> recentChat;
+    private String lastMessage;
 
 
     public RecentChatsAdapter(Context mContext, List<Chat> mChat) {
@@ -41,6 +44,7 @@ public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_chats, parent, false);
+        recentChat = new HashMap<>();
         return new RecentChatsAdapter.ViewHolder(view);
     }
 
@@ -52,9 +56,9 @@ public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.
         ownerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data : dataSnapshot.getChildren()){
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Owner owner = data.getValue(Owner.class);
-                    if(owner.getEmail().equals(chat.getSender())){
+                    if (owner.getEmail().equals(chat.getSender())) {
                         Glide.with(mContext).load(owner.getProfileImageUrl()).into(holder.user_pic);
                     }
                 }
@@ -66,15 +70,17 @@ public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.
 
             }
         });
+        chatRef = FirebaseDatabase.getInstance().getReference().child("chats");
         holder.show_userChat.setText(chat.getSender());
+        lastMessage(chat.getSender(), holder.show_lastMessage);
 
         holder.itemClickListener = new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if(!mChat.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
-                    Intent chatIntent = new Intent(mContext,MessageActivity.class);
-                    chatIntent.putExtra("myUser",FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                    chatIntent.putExtra("dogOwner",mChat.get(position).getSender());
+                if (!mChat.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                    Intent chatIntent = new Intent(mContext, MessageActivity.class);
+                    chatIntent.putExtra("myUser", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    chatIntent.putExtra("dogOwner", mChat.get(position).getSender());
                     mContext.startActivity(chatIntent);
                 }
 
@@ -88,7 +94,7 @@ public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements ItemClickListener, View.OnClickListener {
-        public TextView show_userChat;
+        public TextView show_userChat, show_lastMessage;
         public ImageView user_pic;
         ItemClickListener itemClickListener;
 
@@ -96,6 +102,7 @@ public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.
             super(itemView);
             user_pic = itemView.findViewById(R.id.showUserProfile);
             show_userChat = itemView.findViewById(R.id.show_userChat);
+            show_lastMessage = itemView.findViewById(R.id.show_lastMessage);
             itemView.setOnClickListener(this);
         }
 
@@ -112,5 +119,37 @@ public class RecentChatsAdapter extends RecyclerView.Adapter<RecentChatsAdapter.
         public void onClick(View view) {
             itemClickListener.onClick(view, getAdapterPosition());
         }
+    }
+
+    private void lastMessage(final String userid, final TextView last_msg) {
+        lastMessage = "default";
+        final String firebaseUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chats");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Chat chat = data.getValue(Chat.class);
+                    if (chat.getReceiver().equals(firebaseUser) && chat.getSender().equals(userid) ||
+                            chat.getSender().equals(firebaseUser) && chat.getReceiver().equals(userid)) {
+                        lastMessage = chat.getMessage();
+                    }
+                }
+                switch (lastMessage) {
+                    case "default":
+                        last_msg.setText("No Message");
+                        break;
+                    default:
+                        last_msg.setText(lastMessage);
+                        break;
+                }
+                lastMessage = "default";
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

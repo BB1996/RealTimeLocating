@@ -79,6 +79,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
     private Location mLastLocation = new Location("dummy");
     Marker userMarker;
     HashMap<String, Marker> otherMarkers;
+    List<Marker> allMarkers;
     Polyline currentPolyline;
 
     @Override
@@ -655,7 +656,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
                     LatLng canisitaLocation = new LatLng(canisite.getLat(), canisite.getLng());
 
-                    Marker canisitaMarker = mMap.addMarker(new MarkerOptions()
+                    mMap.addMarker(new MarkerOptions()
                             .position(canisitaLocation)
                             .title(canisite.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.canisita)));
@@ -684,6 +685,7 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
                             .position(petShopLocation)
                             .title(petShop.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.petshop)));
+
                 }
             }
 
@@ -850,9 +852,9 @@ public class MapTracking extends AppCompatActivity implements OnMapReadyCallback
 
         marker.showInfoWindow();
 
+
         for (final Marker marker1 : abandonedMarker) {
             if (marker.equals(marker1)) {
-
 
                 AlertDialog alertDialog = new AlertDialog.Builder(MapTracking.this).create();
                 alertDialog.setTitle(Html.fromHtml("<font color='#FFFFFF'>Abandoned dog</font>"));

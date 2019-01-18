@@ -33,6 +33,15 @@
                 android:textColor="#000"
                 android:textSize="20sp" />
 
+            <TextView
+                android:id="@+id/show_lastMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/fui_transparent"
+                android:padding="8dp"
+                android:text="@string/userEmailReport"
+                android:textColor="#000"
+                android:textSize="20sp" />
 
         </LinearLayout>
 

@@ -76,6 +76,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
     private ActionBarDrawerToggle mToggle;
     private TextView drawerUserText, drawerUserDog;
     private ImageView drawerImageUser;
+    private ArrayList<String> userChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
         userList = new ArrayList<String>();
         offlineList = new ArrayList<String>();
+        userChat = new ArrayList<String>();
 
         broadcastReceiver = new BootReceiver();
         IntentFilter intentFilter = new IntentFilter("com.tutorial.athina.pethood.action.REFRESH_INTERVAL");
@@ -138,6 +140,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 buildGoogleApiClient();
                 createLocationRequest();
                 displayLocation();
+                updateUserChat();
 
             }
         }
@@ -389,6 +392,26 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
 
         super.onStop();
     }
+    private void updateUserChat() {
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Owners");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Owner owner = data.getValue(Owner.class);
+                    userChat.add(owner.getEmail());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
     @Override
     protected void onResume() {
@@ -470,6 +493,7 @@ public class ListOnline extends AppCompatActivity implements GoogleApiClient.Con
                 break;
             case R.id.action_recentChats:
                 Intent recentIntent = new Intent(ListOnline.this,RecentChatsActivity.class);
+                recentIntent.putStringArrayListExtra("userChat",userChat);
                 startActivity(recentIntent);
                 break;
             case R.id.action_map:
